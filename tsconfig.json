@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "lib": ["ES2023", "ES2023.Collection", "DOM"],
         "module": "ES2022",
         "target": "ES2015",
         "moduleResolution": "Node"
