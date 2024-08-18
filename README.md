@@ -1,4 +1,4 @@
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/777c4d64-64cd-49dd-a338-182354e0f032">
-  <h1>Typescript Playwright Rollup</h1>
+  <img width="200px" src="https://github.com/user-attachments/assets/75212c43-14de-471d-aa38-7630a2103510">
+  <h1>CSS Mangle Webpack Plugin</h1>
 </div>
