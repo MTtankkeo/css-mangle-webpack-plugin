@@ -14,8 +14,8 @@ const options = {
     plugins: plugins,
     input: "./src/index.ts",
     output: [
-        {file: "./dist/index.esm.js", format: "esm", name: "CSSMangleWebpackPlugin"},
-        {file: "./dist/index.umd.js", format: "umd", name: "CSSMangleWebpackPlugin"}
+        {file: "./dist/index.esm.js", format: "esm", name: "CSSMangleWebpackPlugin", exports: "named"},
+        {file: "./dist/index.umd.js", format: "umd", name: "CSSMangleWebpackPlugin", exports: "named"}
     ]
 }
 
