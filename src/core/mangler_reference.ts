@@ -17,9 +17,9 @@ export class CSSVariableReference extends ManglerReference {
         // This patterns matched by the following are:
         //
         // - "--background"
-        // - "--foreground"
+        // - '--foreground'
         //
-        const regexps1 = syntexText.matchAll(/(?<="|')--[\w-]+(?="|')/g);
+        const regexps1 = syntexText.matchAll(/(?<="|')--[\w-]+(?=\\?\"|')/g);
 
         // This patterns matched by the following are:
         //
