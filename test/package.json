@@ -1,0 +1,12 @@
+{
+  "type": "module",
+  "scripts": {
+    "build": "webpack build",
+    "watch": "webpack build --watch"
+  },
+  "devDependencies": {
+    "css-mangle-webpack-plugin": "file:..",
+    "webpack": "^5.93.0",
+    "webpack-cli": "^5.1.4"
+  }
+}
