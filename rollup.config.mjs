@@ -6,7 +6,7 @@ const plugins = [
         tsconfig: "./tsconfig.json",
         useTsconfigDeclarationDir: true
     }),
-    terser({})
+    terser()
 ]
 
 /** @type {import("rollup").RollupOptions} */
