@@ -8,4 +8,5 @@ export declare class Mangler {
     static get instance(): Mangler;
     createName(count?: number): string;
     transform(from: string): string;
+    CSSVariableOf(value: string): string;
 }

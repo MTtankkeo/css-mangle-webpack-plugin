@@ -32,4 +32,8 @@ export class Mangler {
     transform(from: string): string {
         return this.cache[from] ?? (this.cache[from] = this.createName());
     }
+
+    CSSVariableOf(value: string): string {
+        return this.cache[value] ? `--${this.transform(value)}` : value;
+    }
 }

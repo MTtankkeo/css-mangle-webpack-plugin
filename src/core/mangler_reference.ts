@@ -16,26 +16,54 @@ export class CSSVariableReference extends ManglerReference {
         // 
         // This patterns matched by the following are:
         //
-        // - var(--background)
-        // - var(--foreground)
         // - "--background"
         // - "--foreground"
         //
-        const regexps = syntexText.matchAll(/(?<=var\()--[\w-]+(?=\))|((?<="|')--[\w-]+(?="|'))/g);
+        const regexps1 = syntexText.matchAll(/(?<="|')--[\w-]+(?="|')/g);
+
+        // This patterns matched by the following are:
+        //
+        // - var(--background, rgb(255, 255, 255))
+        // - var(--foreground)
+        //
+        const regexps2 = syntexText.matchAll(/(?<=var\()[^()]*(?:\([^\)]*\)[^()]*)*(?=\))/g);
+
         let replacedLength = 0;
 
-        for (const regexp of regexps) {
+        for (const regexp of regexps1) {
             const name = regexp[0];
             const index = regexp.index - replacedLength;
             const result = StringUtil.replaceRange(
                 syntexText,
                 index,
                 index + name.length,
-                Mangler.instance.cache[name] ? `--${Mangler.instance.transform(name)}` : name
+                Mangler.instance.CSSVariableOf(name)
             );
 
             replacedLength += syntexText.length - result.length;
             syntexText = result;
+        }
+
+        for (const global of regexps2) {
+            const locals = global[0].matchAll(/--[\w-]+/g); // split
+            const globalIndex = global.index;
+
+            for (const local of locals) {
+                const name = local[0];
+                const index = (globalIndex + local.index) - replacedLength;
+                const result = StringUtil.replaceRange(
+                    syntexText,
+                    index,
+                    index + name.length,
+                    Mangler.instance.CSSVariableOf(name)
+                )
+
+                replacedLength += syntexText.length - result.length;
+                syntexText = result;
+
+                console.log("global: ", globalIndex);
+                console.log("local", local.index);
+            }
         }
 
         return syntexText;
