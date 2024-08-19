@@ -7,12 +7,14 @@ console.log(Mangler.instance.transform("rearground"));
 console.log(Mangler.instance.transform("foreground"));
 console.log(Mangler.instance.transform("background"));
 
-ManglerParser.variable(`
+const variable = ManglerParser.variable(`
     :root {
         --background: red;
         --foreground: blue;
     }
 `)
+
+console.log(variable);
 
 const result = ManglerTranspiler.transform(`
     var(--background)
