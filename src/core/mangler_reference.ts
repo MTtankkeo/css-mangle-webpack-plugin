@@ -60,9 +60,6 @@ export class CSSVariableReference extends ManglerReference {
 
                 replacedLength += syntexText.length - result.length;
                 syntexText = result;
-
-                console.log("global: ", globalIndex);
-                console.log("local", local.index);
             }
         }
 
