@@ -17,7 +17,7 @@ This webpack plugin package is a CSS mangler that globally optimizes and shorten
 > [!IMPORTANT]
 > This package is more developing and fixing..., And this package current version is alpha.
 
-## Current Status of Support
+## Support Current Status
 | Type | Status | Support |
 | ---- | ------ | ------- |
 | Variable | Alpha and Testing | ✅ |
