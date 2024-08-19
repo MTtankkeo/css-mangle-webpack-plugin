@@ -1,7 +1,7 @@
 import { Compiler } from "webpack";
 import { ManglerTranspiler } from "../core/mangler_transpiler";
 import { CSSVariableDeclaration } from "../core/mangler_declaration";
-import { CSSVariableDefinition } from "../core/mangler_reference";
+import { CSSVariableReference } from "../core/mangler_reference";
 
 export interface CSSMangleWebpackPluginOptions {
     // ignoreScript?: boolean;
@@ -19,7 +19,7 @@ export class CSSMangleWebpackPlugin {
         if (options?.mangle?.staticVariable ?? true) {
             this.transpilers.push({
                 declaration: new CSSVariableDeclaration(),
-                reference: new CSSVariableDefinition()
+                reference: new CSSVariableReference()
             })
         }
     }

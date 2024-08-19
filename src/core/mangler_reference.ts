@@ -1,11 +1,11 @@
 import { StringUtil } from "../utils/string";
 import { Mangler } from "./mangler";
 
-export abstract class ManglerDefinition {
+export abstract class ManglerReference {
     abstract transform(syntexText: string): string;
 }
 
-export class CSSVariableDefinition extends ManglerDefinition {
+export class CSSVariableReference extends ManglerReference {
     transform(syntexText: string) {
         // References to CSS variables generally have a unique syntax,
         // but it can vary in different environments.

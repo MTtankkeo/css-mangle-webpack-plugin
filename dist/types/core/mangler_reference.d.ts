@@ -1,6 +1,6 @@
-export declare abstract class ManglerDefinition {
+export declare abstract class ManglerReference {
     abstract transform(syntexText: string): string;
 }
-export declare class CSSVariableDefinition extends ManglerDefinition {
+export declare class CSSVariableReference extends ManglerReference {
     transform(syntexText: string): string;
 }
