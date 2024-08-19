@@ -22,6 +22,13 @@ To install this package in your project, enter the following command.
 
 > When you want to update this package, enter npm update animable-js --save in the terminal to run it.
 
+## Current Status of Support
+| Type | Status | Support |
+| ---- | ------ | ------- |
+| Variable | Alpha and Testing | ✅ |
+| Class | Not supported | 🟥
+| Id | Not supported | 🟥
+
 ```
 npm install css-mangle-webpack-plugin --save-dev
 ```
