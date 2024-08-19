@@ -21,7 +21,7 @@ export class ManglerTranspiler {
         // - "--background"
         // - "--foreground"
         //
-        const regexps = syntexText.matchAll(/((?<=var\()--\w+(?=\)))|(((?<=")--\w+(?=")))/g);
+        const regexps = syntexText.matchAll(/(?<=var\()--\w+(?=\))|((?<="|')--\w+(?="|'))/g);
         let replacedLength = 0;
 
         for (const regexp of regexps) {
