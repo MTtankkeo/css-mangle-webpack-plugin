@@ -17,7 +17,9 @@ export class ManglerTranspiler {
         // This patterns matched by the following regular expression are:
         //
         // - var(--background)
+        // - var(--foreground)
         // - "--background"
+        // - "--foreground"
         //
         const regexps = syntexText.matchAll(/((?<=var\()--\w+(?=\)))|(((?<=")--\w+(?=")))/g);
         let replacedLength = 0;
