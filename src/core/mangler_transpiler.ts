@@ -7,7 +7,19 @@ export class ManglerTranspiler {
     }
 
     static transformVariable(syntexText: string): string {
-        const regexps = syntexText.matchAll(/(?<=var\()--\w+(?=\))/g);
+        // References to CSS variables generally have a unique syntax,
+        // but it can vary in different environments.
+        //
+        // Additionally, referencing variables is common not only in CSS-related files,
+        // but also in script environments like `JS`, `JSX`, or bundled package scripts
+        // where CSS variables might be declared or referenced.
+        // 
+        // This patterns matched by the following regular expression are:
+        //
+        // - var(--background)
+        // - "--background"
+        //
+        const regexps = syntexText.matchAll(/((?<=var\()--\w+(?=\)))|(((?<=")--\w+(?=")))/g);
         let replacedLength = 0;
 
         for (const regexp of regexps) {

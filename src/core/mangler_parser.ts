@@ -2,8 +2,24 @@ import { StringUtil } from "../utils/string";
 import { Mangler } from "./mangler";
 
 export class ManglerParser {
+    /**
+     * Parse a given syntex strings and based on declare identifier
+     * name to [Mangler].
+     */
     static variable(syntexText: string): string {
-        const regexps = syntexText.matchAll(/--\w+(?=\s*:)/g);
+        // In CSS variable declarations, a unique syntax is generally used,
+        // making identification relatively straightforward.
+        //
+        // This patterns matched by the following regular expression are:
+        //
+        // * --background: white;
+        // * --rearground: rgb(240, 242, 246);
+        // * --foreground: black;
+        //
+        // See Also, where "background" is a unique identifier,
+        // so any character form is acceptable.
+        //
+        const regexps = syntexText.matchAll(/--[\w-]+(?=\s*: ?\w+;)/g);
         let replacedLength = 0;
 
         for (const regexp of regexps) {
