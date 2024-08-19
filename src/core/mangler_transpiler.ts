@@ -20,7 +20,7 @@ export class ManglerTranspiler {
                 syntexText,
                 index,
                 index + name.length,
-                `--${Mangler.instance.transform(name)}`
+                `--${Mangler.instance.cache[name] ? Mangler.instance.transform(name) : name}`
             );
 
             replacedLength += syntexText.length - result.length;
