@@ -9,7 +9,7 @@
   "module": "./dist/index.esm.js",
   "types": "./dist/types/index.d.ts",
   "type": "commonjs",
-  "keywords": ["css", "webpack", "plugin", "mangler", "jsx"],
+  "keywords": ["css", "webpack", "plugin", "mangler", "minifier", "jsx"],
   "scripts": {
     "build": "rollup -c",
     "watch": "rollup -c -w"
