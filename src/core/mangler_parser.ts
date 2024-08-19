@@ -10,7 +10,7 @@ export class ManglerParser {
         // In CSS variable declarations, a unique syntax is generally used,
         // making identification relatively straightforward.
         //
-        // This patterns matched by the following regular expression are:
+        // This patterns matched by the following are:
         //
         // * --background: white;
         // * --rearground: rgb(240, 242, 246);

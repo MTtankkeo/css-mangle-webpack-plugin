@@ -14,7 +14,7 @@ export class ManglerTranspiler {
         // but also in script environments like `JS`, `JSX`, or bundled package scripts
         // where CSS variables might be declared or referenced.
         // 
-        // This patterns matched by the following regular expression are:
+        // This patterns matched by the following are:
         //
         // - var(--background)
         // - var(--foreground)
