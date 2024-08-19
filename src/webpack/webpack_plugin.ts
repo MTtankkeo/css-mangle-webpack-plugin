@@ -16,18 +16,11 @@ export class CSSMangleWebpackPlugin {
                     for (const assetName in assets) {
                         if (assetName.endsWith(".html")
                          || assetName.endsWith(".js")
+                         || assetName.endsWith(".jsx")
                          || assetName.endsWith(".css")) {
                             const source = assets[assetName].source().toString();
-
-                            ManglerParser.variable(`
-                                :root {
-                                    --background: white;
-                                    --rearground: rgb(240, 242, 246);
-                                    --foreground: black;
-                                }
-                            `);
-
-                            const transpiled = ManglerTranspiler.transform(source);
+                            const parsed = ManglerParser.variable(source);
+                            const transpiled = ManglerTranspiler.transform(parsed);
 
                             compilation.updateAsset(
                                 assetName,
