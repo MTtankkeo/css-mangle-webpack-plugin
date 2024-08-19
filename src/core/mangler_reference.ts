@@ -2,11 +2,11 @@ import { StringUtil } from "../utils/string";
 import { Mangler } from "./mangler";
 
 export abstract class ManglerReference {
-    abstract transform(syntexText: string): string;
+    abstract transform(syntexText: string, mangler: Mangler): string;
 }
 
 export class CSSVariableReference extends ManglerReference {
-    transform(syntexText: string) {
+    transform(syntexText: string, mangler: Mangler) {
         // References to CSS variables generally have a unique syntax,
         // but it can vary in different environments.
         //
@@ -37,7 +37,7 @@ export class CSSVariableReference extends ManglerReference {
                 syntexText,
                 index,
                 index + name.length,
-                Mangler.instance.CSSVariableOf(name)
+                mangler.CSSVariableOf(name)
             );
 
             replacedLength += syntexText.length - result.length;
@@ -55,7 +55,7 @@ export class CSSVariableReference extends ManglerReference {
                     syntexText,
                     index,
                     index + name.length,
-                    Mangler.instance.CSSVariableOf(name)
+                    mangler.CSSVariableOf(name)
                 )
 
                 replacedLength += syntexText.length - result.length;

@@ -1,6 +1,7 @@
+import { Mangler } from "./mangler";
 export declare abstract class ManglerReference {
-    abstract transform(syntexText: string): string;
+    abstract transform(syntexText: string, mangler: Mangler): string;
 }
 export declare class CSSVariableReference extends ManglerReference {
-    transform(syntexText: string): string;
+    transform(syntexText: string, mangler: Mangler): string;
 }

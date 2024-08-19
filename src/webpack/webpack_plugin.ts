@@ -2,6 +2,7 @@ import { Compiler } from "webpack";
 import { ManglerTranspiler } from "../core/mangler_transpiler";
 import { CSSVariableDeclaration } from "../core/mangler_declaration";
 import { CSSVariableReference } from "../core/mangler_reference";
+import { Mangler } from "../core/mangler";
 
 export interface CSSMangleWebpackPluginOptions {
     // ignoreScript?: boolean;
@@ -19,7 +20,8 @@ export class CSSMangleWebpackPlugin {
         if (options?.mangle?.staticVariable ?? true) {
             this.transpilers.push({
                 declaration: new CSSVariableDeclaration(),
-                reference: new CSSVariableReference()
+                reference: new CSSVariableReference(),
+                mangler: new Mangler(),
             })
         }
     }
@@ -39,8 +41,8 @@ export class CSSMangleWebpackPlugin {
                          || assetName.endsWith(".css")) {
                             for (const transpiler of this.transpilers) {
                                 const source = assets[assetName].source().toString();
-                                const t1 = transpiler.declaration.transform(source);
-                                const t2 = transpiler.reference.transform(t1);
+                                const t1 = transpiler.declaration.transform(source, transpiler.mangler);
+                                const t2 = transpiler.reference.transform(t1, transpiler.mangler);
 
                                 compilation.updateAsset(
                                     assetName,

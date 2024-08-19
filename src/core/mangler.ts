@@ -1,16 +1,8 @@
 
 export class Mangler {
-    private static _instance: Mangler;
-    private constructor() {}
-
     count: number = 0;
     chars = "abcdefghijklmnopqrstuvwxyz";
     cache = new Map();
-
-    /** Gets a unique instance of the [Mangler] class. */
-    static get instance() {
-        return this._instance ?? (this._instance = new Mangler());
-    }
 
     createName(count = this.count++) {
         let result = "";
