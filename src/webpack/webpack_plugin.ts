@@ -19,7 +19,7 @@ export class CSSMangleWebpackPlugin {
         if (options?.mangle?.staticVariable ?? true) {
             this.transpilers.push({
                 declaration: new CSSVariableDeclaration(),
-                definition: new CSSVariableDefinition()
+                reference: new CSSVariableDefinition()
             })
         }
     }
@@ -40,7 +40,7 @@ export class CSSMangleWebpackPlugin {
                             for (const transpiler of this.transpilers) {
                                 const source = assets[assetName].source().toString();
                                 const t1 = transpiler.declaration.transform(source);
-                                const t2 = transpiler.definition.transform(t1);
+                                const t2 = transpiler.reference.transform(t1);
 
                                 compilation.updateAsset(
                                     assetName,

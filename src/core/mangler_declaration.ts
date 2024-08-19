@@ -23,7 +23,7 @@ export class CSSVariableDeclaration extends ManglerDeclaration {
         // See Also, where "background" is a unique identifier,
         // so any character form is acceptable.
         //
-        const regexps = syntexText.matchAll(/--[\w-]+(?=\s*: ?\w+;)/g);
+        const regexps = syntexText.matchAll(/--[\w-]+(?=\s*: ?\w+)/g);
         let replacedLength = 0;
 
         for (const regexp of regexps) {
