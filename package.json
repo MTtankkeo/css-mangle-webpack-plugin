@@ -1,5 +1,8 @@
 {
   "name": "css-mangle-webpack-plugin",
+  "description": "This webpack plugin package is a CSS mangler that globally optimizes and shortens identifier names.",
+  "repository": "https://github.com/MTtankkeo/css-mangle-webpack-plugin",
+  "author": "Dev Ttangkong",
   "main": "./dist/index.umd.js",
   "module": "./dist/index.esm.js",
   "types": "./dist/types/index.d.ts",
