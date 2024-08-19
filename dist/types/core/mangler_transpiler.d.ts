@@ -1,4 +1,6 @@
-export declare class ManglerTranspiler {
-    static transform(syntexText: string): string;
-    static transformVariable(syntexText: string): string;
+import { ManglerDeclaration } from "./mangler_declaration";
+import { ManglerDefinition } from "./mangler_definition";
+export interface ManglerTranspiler {
+    declaration: ManglerDeclaration;
+    definition: ManglerDefinition;
 }

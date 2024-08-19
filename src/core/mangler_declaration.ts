@@ -1,12 +1,16 @@
 import { StringUtil } from "../utils/string";
 import { Mangler } from "./mangler";
 
-export class ManglerParser {
+export abstract class ManglerDeclaration {
+    abstract transform(syntexText: string): string;
+}
+
+export class CSSVariableDeclaration extends ManglerDeclaration {
     /**
      * Parse a given syntex strings and based on declare identifier
      * name to [Mangler].
      */
-    static variable(syntexText: string): string {
+    transform(syntexText: string): string {
         // In CSS variable declarations, a unique syntax is generally used,
         // making identification relatively straightforward.
         //

@@ -1,13 +1,28 @@
 import { Compiler } from "webpack";
 import { ManglerTranspiler } from "../core/mangler_transpiler";
-import { ManglerParser } from "../core/mangler_parser";
+import { CSSVariableDeclaration } from "../core/mangler_declaration";
+import { CSSVariableDefinition } from "../core/mangler_definition";
 
 export interface CSSMangleWebpackPluginOptions {
-    useStrict: boolean
+    // ignoreScript?: boolean;
+    mangle?: {
+        staticVariable?: boolean
+    }
 }
 
 export class CSSMangleWebpackPlugin {
-    constructor(public options: CSSMangleWebpackPluginOptions) {}
+    transpilers: ManglerTranspiler[] = [];
+
+    constructor(public options: CSSMangleWebpackPluginOptions) {
+
+        // When a user want to mangle a static variables of CSS.
+        if (options?.mangle?.staticVariable ?? true) {
+            this.transpilers.push({
+                declaration: new CSSVariableDeclaration(),
+                definition: new CSSVariableDefinition()
+            })
+        }
+    }
 
     apply(compiler: Compiler) {
         compiler.hooks.compilation.tap("CSSMangleWebpackPlugin", (compilation) => {
@@ -22,14 +37,16 @@ export class CSSMangleWebpackPlugin {
                          || assetName.endsWith(".js")
                          || assetName.endsWith(".jsx")
                          || assetName.endsWith(".css")) {
-                            const source = assets[assetName].source().toString();
-                            const parsed = ManglerParser.variable(source);
-                            const transpiled = ManglerTranspiler.transform(parsed);
+                            for (const transpiler of this.transpilers) {
+                                const source = assets[assetName].source().toString();
+                                const t1 = transpiler.declaration.transform(source);
+                                const t2 = transpiler.definition.transform(t1);
 
-                            compilation.updateAsset(
-                                assetName,
-                                new compiler.webpack.sources.RawSource(transpiled)
-                            );
+                                compilation.updateAsset(
+                                    assetName,
+                                    new compiler.webpack.sources.RawSource(t2)
+                                );
+                            }
                         }
                     }
                 }
