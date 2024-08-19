@@ -17,17 +17,17 @@ This webpack plugin package is a CSS mangler that globally optimizes and shorten
 > [!IMPORTANT]
 > This package is more developing and fixing..., And this package current version is alpha.
 
-# Install by NPM
-To install this package in your project, enter the following command.
-
-> When you want to update this package, enter npm update animable-js --save in the terminal to run it.
-
 ## Current Status of Support
 | Type | Status | Support |
 | ---- | ------ | ------- |
 | Variable | Alpha and Testing | ✅ |
 | Class | Not supported | 🟥
 | Id | Not supported | 🟥
+
+# Install by NPM
+To install this package in your project, enter the following command.
+
+> When you want to update this package, enter npm update animable-js --save in the terminal to run it.
 
 ```
 npm install css-mangle-webpack-plugin --save-dev
