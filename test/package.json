@@ -5,7 +5,10 @@
     "watch": "webpack build --watch"
   },
   "devDependencies": {
+    "css-loader": "^7.1.2",
     "css-mangle-webpack-plugin": "file:..",
+    "html-webpack-plugin": "^5.6.0",
+    "mini-css-extract-plugin": "^2.9.0",
     "webpack": "^5.93.0",
     "webpack-cli": "^5.1.4"
   }

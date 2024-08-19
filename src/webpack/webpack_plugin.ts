@@ -2,8 +2,12 @@ import { Compiler } from "webpack";
 import { ManglerTranspiler } from "../core/mangler_transpiler";
 import { ManglerParser } from "../core/mangler_parser";
 
+export interface CSSMangleWebpackPluginOptions {
+    useStrict: boolean
+}
+
 export class CSSMangleWebpackPlugin {
-    constructor() {}
+    constructor(public options: CSSMangleWebpackPluginOptions) {}
 
     apply(compiler: Compiler) {
         compiler.hooks.compilation.tap("CSSMangleWebpackPlugin", (compilation) => {
