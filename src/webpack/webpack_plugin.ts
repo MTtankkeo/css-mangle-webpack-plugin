@@ -1,7 +1,7 @@
 import { Compiler } from "webpack";
 import { ManglerTranspiler } from "../core/mangler_transpiler";
 import { CSSVariableDeclaration } from "../core/mangler_declaration";
-import { CSSVariableDefinition } from "../core/mangler_definition";
+import { CSSVariableDefinition } from "../core/mangler_reference";
 
 export interface CSSMangleWebpackPluginOptions {
     // ignoreScript?: boolean;
