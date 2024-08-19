@@ -29,7 +29,7 @@ export class Mangler {
         return result;
     }
 
-    transform(from: string) {
+    transform(from: string): string {
         return this.cache[from] ?? (this.cache[from] = this.createName());
     }
 }
