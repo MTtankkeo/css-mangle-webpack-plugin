@@ -1,8 +1,9 @@
 import { Compiler } from "webpack";
 import { ManglerTranspiler } from "../core/mangler_transpiler";
 export interface CSSMangleWebpackPluginOptions {
+    printLogs?: "all" | "warning" | "none";
     mangle?: {
-        staticVariable?: boolean;
+        variable?: boolean;
     };
 }
 export declare class CSSMangleWebpackPlugin {

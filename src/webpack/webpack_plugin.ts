@@ -6,8 +6,9 @@ import { Mangler } from "../core/mangler";
 
 export interface CSSMangleWebpackPluginOptions {
     // ignoreScript?: boolean;
+    printLogs?: "all" | "warning" | "none",
     mangle?: {
-        staticVariable?: boolean
+        variable?: boolean
     }
 }
 
@@ -17,7 +18,7 @@ export class CSSMangleWebpackPlugin {
     constructor(public options: CSSMangleWebpackPluginOptions) {
 
         // When a user want to mangle a static variables of CSS.
-        if (options?.mangle?.staticVariable ?? true) {
+        if (options?.mangle?.variable ?? true) {
             this.transpilers.push({
                 declaration: new CSSVariableDeclaration(),
                 reference: new CSSVariableReference(),
@@ -50,6 +51,13 @@ export class CSSMangleWebpackPlugin {
                                 );
                             }
                         }
+                    }
+
+                    if (this.options?.printLogs == "all" ?? false) {
+                        this.transpilers.forEach(e => e.mangler.printLogs());
+                    }
+                    if (this.options?.printLogs == "warning" ?? false) {
+                        this.transpilers.forEach(e => e.mangler.printLogsUnused());
                     }
                 }
             );

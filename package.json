@@ -9,7 +9,14 @@
   "module": "./dist/index.esm.js",
   "types": "./dist/types/index.d.ts",
   "type": "commonjs",
-  "keywords": ["css", "webpack", "plugin", "mangler", "minifier", "jsx"],
+  "keywords": [
+    "css",
+    "webpack",
+    "plugin",
+    "mangler",
+    "minifier",
+    "jsx"
+  ],
   "scripts": {
     "build": "rollup -c",
     "watch": "rollup -c -w"
@@ -17,6 +24,7 @@
   "devDependencies": {
     "@rollup/plugin-terser": "^0.4.4",
     "@types/webpack": "^5.28.5",
+    "chalk": "^5.3.0",
     "rollup": "^4.21.0",
     "rollup-cli": "^1.0.9",
     "rollup-plugin-typescript2": "^0.36.0",
