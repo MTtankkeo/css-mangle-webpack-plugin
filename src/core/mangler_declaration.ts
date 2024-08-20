@@ -43,7 +43,7 @@ export class CSSVariableDeclaration extends ManglerDeclaration {
 export class CSSQueryDeclaration extends ManglerDeclaration {
     transform(syntexText: string, mangler: Mangler): string {
         // this syntex is a pseudo-class of CSS.
-        const pesudoClass = /[a-zA-Z0-9_-]*/.source;
+        const pesudoClass = /(?:[a-zA-Z0-9_-]*|\:[a-zA-Z0-9_\-\(\)]*)/.source;
 
         // This syntax is a selector identifier that is like .a and #b
         const selectorId = /[a-zA-Z0-9_-]/.source;
@@ -53,7 +53,7 @@ export class CSSQueryDeclaration extends ManglerDeclaration {
         // #b
         // .a:hover
         // #b:hover
-        const ids = `${selectorId}(:?${pesudoClass})`;
+        const ids = `${selectorId}${pesudoClass}`;
 
         // This patterns matched by the following are:
         //
