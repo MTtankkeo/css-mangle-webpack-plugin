@@ -62,7 +62,7 @@ export class CSSQueryDeclaration extends ManglerDeclaration {
         // .a #b {}
         // .a:hover {}
         // .a:hover #b {}
-        const syntaxText = `(?<=\\.|#)${ids}(?=(\\s*|\\s?\\w*(\\.|#)${ids}\\s*){[^{}}]*})`;
+        const syntaxText = `(?<=\\.|#)${ids}(?=(\\s*|\\s?\\w*(\\.|#)${ids}\\s*){[^{}]*})`;
         const syntaxList = syntexText.matchAll(new RegExp(syntaxText, "g"));
 
         console.log(syntaxText);
