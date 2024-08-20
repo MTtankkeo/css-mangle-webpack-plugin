@@ -5,7 +5,11 @@ import { CSSVariableReference } from "../core/mangler_reference";
 import { Mangler } from "../core/mangler";
 
 export interface CSSMangleWebpackPluginOptions {
-    // ignoreScript?: boolean;
+    /**
+     * Whether unique identifiers in JavaScript and JSX should not be
+     * targets for transpilation.
+     */
+    ignoreScript?: boolean;
     printLogs?: "all" | "warning" | "none",
     mangle?: {
         variable?: boolean
@@ -28,6 +32,8 @@ export class CSSMangleWebpackPlugin {
     }
 
     apply(compiler: Compiler) {
+        const useMangleScript = !(this.options?.ignoreScript ?? false);
+
         compiler.hooks.compilation.tap("CSSMangleWebpackPlugin", (compilation) => {
             compilation.hooks.processAssets.tap(
                 {
@@ -37,8 +43,8 @@ export class CSSMangleWebpackPlugin {
                 (assets) => {
                     for (const assetName in assets) {
                         if (assetName.endsWith(".html")
-                         || assetName.endsWith(".js")
-                         || assetName.endsWith(".jsx")
+                         || assetName.endsWith(".js")  && useMangleScript
+                         || assetName.endsWith(".jsx") && useMangleScript
                          || assetName.endsWith(".css")) {
                             for (const transpiler of this.transpilers) {
                                 const source = assets[assetName].source().toString();

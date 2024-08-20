@@ -5,7 +5,7 @@
         <thead>
           <tr>
             <th>Version</th>
-            <th>v1.0.0-alpha1</th>
+            <th>v1.0.0-alpha2</th>
           </tr>
         </tbody>
     </table>
@@ -66,3 +66,10 @@ body { background-color: var(--background) }
 
 body { background-color: var(--a) }
 ```
+
+## Properties of CSSMangleWebpackPluginOptions
+| Name | Descript | Type |
+| ---- | ----- | ------- |
+| ignoreScript | Whether unique identifiers in JavaScript and JSX should not be targets for transpilation. | boolean
+| printLogs | Not ready a comment about this. | "all" \| "warning" \| "none",
+| mangle | Not ready a comment about this. | {variable?: boolean}
