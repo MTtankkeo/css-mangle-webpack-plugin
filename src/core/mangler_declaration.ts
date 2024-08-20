@@ -39,3 +39,15 @@ export class CSSVariableDeclaration extends ManglerDeclaration {
         return syntexText;
     }
 }
+
+export class CSSQueryDeclaration extends ManglerDeclaration {
+    transform(syntexText: string, mangler: Mangler): string {
+        const regexps = syntexText.matchAll(/(?<=\.|#)[a-zA-Z0-9_-]+(?=\s*{[^}]*})/g);
+
+        for (const global of regexps) {
+            console.log(global[0])
+        }
+
+        return syntexText;
+    }
+}

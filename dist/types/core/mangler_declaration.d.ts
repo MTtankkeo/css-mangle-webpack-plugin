@@ -9,3 +9,6 @@ export declare class CSSVariableDeclaration extends ManglerDeclaration {
      */
     transform(syntexText: string, mangler: Mangler): string;
 }
+export declare class CSSQueryDeclaration extends ManglerDeclaration {
+    transform(syntexText: string, mangler: Mangler): string;
+}

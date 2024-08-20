@@ -8,7 +8,8 @@ export interface CSSMangleWebpackPluginOptions {
     ignoreScript?: boolean;
     printLogs?: "all" | "warning" | "none";
     mangle?: {
-        variable?: boolean;
+        variableName?: boolean;
+        className?: boolean;
     };
 }
 export declare class CSSMangleWebpackPlugin {

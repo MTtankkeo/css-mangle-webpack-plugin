@@ -66,3 +66,9 @@ export class CSSVariableReference extends ManglerReference {
         return syntexText;
     }
 }
+
+export class CSSQueryReference extends ManglerReference {
+    transform(syntexText: string, mangler: Mangler): string {
+        return syntexText;
+    }
+}

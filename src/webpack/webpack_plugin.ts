@@ -1,7 +1,7 @@
 import { Compiler } from "webpack";
 import { ManglerTranspiler } from "../core/mangler_transpiler";
-import { CSSVariableDeclaration } from "../core/mangler_declaration";
-import { CSSVariableReference } from "../core/mangler_reference";
+import { CSSQueryDeclaration, CSSVariableDeclaration } from "../core/mangler_declaration";
+import { CSSQueryReference, CSSVariableReference } from "../core/mangler_reference";
 import { Mangler } from "../core/mangler";
 
 export interface CSSMangleWebpackPluginOptions {
@@ -12,7 +12,8 @@ export interface CSSMangleWebpackPluginOptions {
     ignoreScript?: boolean;
     printLogs?: "all" | "warning" | "none",
     mangle?: {
-        variable?: boolean
+        variableName?: boolean
+        className?: boolean
     }
 }
 
@@ -20,14 +21,22 @@ export class CSSMangleWebpackPlugin {
     transpilers: ManglerTranspiler[] = [];
 
     constructor(public options: CSSMangleWebpackPluginOptions) {
-
-        // When a user want to mangle a static variables of CSS.
-        if (options?.mangle?.variable ?? true) {
+        // When a user want to compress a variable names of CSS.
+        if (options?.mangle?.variableName ?? true) {
             this.transpilers.push({
                 declaration: new CSSVariableDeclaration(),
                 reference: new CSSVariableReference(),
                 mangler: new Mangler(),
             })
+        }
+
+        // When a user want to compress a class-names of CSS.
+        if (options?.mangle?.className ?? false) {
+            this.transpilers.push({
+                declaration: new CSSQueryDeclaration(),
+                reference: new CSSQueryReference(),
+                mangler: new Mangler(),
+            });
         }
     }
 

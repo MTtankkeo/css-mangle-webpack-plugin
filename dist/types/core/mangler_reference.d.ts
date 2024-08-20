@@ -5,3 +5,6 @@ export declare abstract class ManglerReference {
 export declare class CSSVariableReference extends ManglerReference {
     transform(syntexText: string, mangler: Mangler): string;
 }
+export declare class CSSQueryReference extends ManglerReference {
+    transform(syntexText: string, mangler: Mangler): string;
+}
