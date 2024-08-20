@@ -16,9 +16,9 @@ export class CSSVariableDeclaration extends ManglerDeclaration {
         //
         // This patterns matched by the following are:
         //
-        // * --background: white;
-        // * --rearground: rgb(240, 242, 246);
-        // * --foreground: black;
+        // --background: white;
+        // --rearground: rgb(240, 242, 246);
+        // --foreground: black;
         //
         // See Also, where "background" is a unique identifier,
         // so any character form is acceptable.
@@ -42,9 +42,32 @@ export class CSSVariableDeclaration extends ManglerDeclaration {
 
 export class CSSQueryDeclaration extends ManglerDeclaration {
     transform(syntexText: string, mangler: Mangler): string {
-        const regexps = syntexText.matchAll(/(?<=\.|#)[a-zA-Z0-9_-]+(?=(\s*|\s?(\.|#)[a-zA-Z0-9_-]\s*){[^{}}]*})/g);
+        // this syntex is a pseudo-class of CSS.
+        const pesudoClass = /[a-zA-Z0-9_-]*/.source;
 
-        for (const global of regexps) {
+        // This syntax is a selector identifier that is like .a and #b
+        const selectorId = /[a-zA-Z0-9_-]/.source;
+
+        // This syntax is a selector identifier that is like:
+        // .a
+        // #b
+        // .a:hover
+        // #b:hover
+        const ids = `${selectorId}(:?${pesudoClass})`;
+
+        // This patterns matched by the following are:
+        //
+        // .a {}
+        // #a {}
+        // .a #b {}
+        // .a:hover {}
+        // .a:hover #b {}
+        const syntaxText = `(?<=\\.|#)${ids}(?=(\\s*|\\s?\\w*(\\.|#)${ids}\\s*){[^{}}]*})`;
+        const syntaxList = syntexText.matchAll(new RegExp(syntaxText, "g"));
+
+        console.log(syntaxText);
+
+        for (const global of syntaxList) {
             console.log(global[0])
         }
 
