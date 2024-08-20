@@ -9,6 +9,7 @@ export interface ManglerObject {
     referenceCount: number;
 }
 
+/** Manages the transformation of strings into unique identifiers for compressing. */
 export class Mangler {
     /** This static value that is defining chars of about a base-26. */
     static chars = "abcdefghijklmnopqrstuvwxyz";
