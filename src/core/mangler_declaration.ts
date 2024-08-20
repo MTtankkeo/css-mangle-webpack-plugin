@@ -42,7 +42,7 @@ export class CSSVariableDeclaration extends ManglerDeclaration {
 
 export class CSSQueryDeclaration extends ManglerDeclaration {
     transform(syntexText: string, mangler: Mangler): string {
-        const regexps = syntexText.matchAll(/(?<=\.|#)[a-zA-Z0-9_-]+(?=\s*{[^}]*})/g);
+        const regexps = syntexText.matchAll(/(?<=\.|#)[a-zA-Z0-9_-]+(?=(\s*|\s?(\.|#)[a-zA-Z0-9_-]\s*){[^{}}]*})/g);
 
         for (const global of regexps) {
             console.log(global[0])
