@@ -10,9 +10,9 @@ export interface CSSMangleWebpackPluginOptions {
      * targets for transpilation.
      */
     ignoreScript?: boolean;
-    useStrict?: boolean,
+    // useStrict?: boolean,
     printLogs?: "all" | "warning" | "none",
-    reserved?: string[] | RegExp[],
+    // reserved?: string[] | RegExp[],
     mangle?: {
         variableName?: boolean;
         className?: boolean;
