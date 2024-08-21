@@ -20,13 +20,17 @@ export class CSSVariableDeclaration extends ManglerDeclaration {
         // --rearground: rgb(240, 242, 246);
         // --foreground: black;
         //
+        // @property --logo-color { ... }
+        //
         // See Also, where "background" is a unique identifier,
         // so any character form is acceptable.
         //
-        const regexps = syntexText.matchAll(/--[\w-]+(?=\s*: ?.+;)/g);
+        const syntax1 = syntexText.matchAll(/--[\w-]+(?=\s*: ?.+;)/g);
+        const syntax2 = syntexText.matchAll(/(?<=@property )--[a-zA-Z0-9_-]+(?=\s*{[^{}]*})/g);
+        const syntaxs = [...syntax1, ...syntax2];
         let replacedLength = 0;
 
-        for (const regexp of regexps) {
+        for (const regexp of syntaxs) {
             const name = regexp[0];
             const index = regexp.index - replacedLength;
             const newName = mangler.transform(name);
