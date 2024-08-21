@@ -87,7 +87,7 @@ export class CSSQueryDeclaration extends ManglerDeclaration {
     }
 
     transformId() {
-        
+
     }
 
     transformClass() {

@@ -10,6 +10,7 @@ export interface CSSMangleWebpackPluginOptions {
     mangle?: {
         variableName?: boolean;
         className?: boolean;
+        idName?: boolean;
     };
 }
 export declare class CSSMangleWebpackPlugin {
