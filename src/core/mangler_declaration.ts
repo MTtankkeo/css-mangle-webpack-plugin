@@ -59,7 +59,7 @@ export class CSSQueryDeclaration extends ManglerDeclaration {
         // #b:hover
         const ids = `${selectorId}`;
 
-        const ctx = `(\\s+(\\w*(\\.|\\#)${ids})?\\s*)*\\{`;
+        const ctx = `(\\s+(\\w*((\\.|\\#)${ids})?)\\s*)*\\{`;
 
         // This patterns matched by the following are:
         //
