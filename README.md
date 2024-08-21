@@ -22,7 +22,7 @@ This webpack plugin package is a CSS mangler that globally optimizes and shorten
 ## Support Current Status
 | Type | Status | Support |
 | ---- | ------ | ------- |
-| Variable | Alpha and Testing | ✅ |
+| Variable | Alpha and tested for required dev-enviorment | ✅ |
 | Class | Not supported | 🟥 |
 | Id | Not supported | 🟥 |
 

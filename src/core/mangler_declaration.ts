@@ -44,7 +44,16 @@ export class CSSVariableDeclaration extends ManglerDeclaration {
     }
 }
 
+export interface CSSQueryDeclarationOptions {
+    className: boolean;
+    idName: boolean;
+}
+
 export class CSSQueryDeclaration extends ManglerDeclaration {
+    constructor(options: CSSQueryDeclarationOptions) {
+        super();
+    }
+
     transform(syntaxText: string, mangler: Mangler): string {
         // this syntex is a pseudo-class of CSS.
         const pesudoClass = /((:|::)\w+(\([\w='"]+\))?)?/.source;
@@ -66,14 +75,22 @@ export class CSSQueryDeclaration extends ManglerDeclaration {
         // .a:hover {}
         // .a:hover #b {}
         const regexpText = `${selectorCI}(?=(${contextBehind})*\\{)`;
+        const regexpList = syntaxText.matchAll(new RegExp(regexpText, "g"));
 
         console.log(regexpText);
-        const regexpList = syntaxText.matchAll(new RegExp(regexpText, "g"));
 
         for (const global of regexpList) {
             console.log(global[0])
         }
 
         return syntaxText;
+    }
+
+    transformId() {
+        
+    }
+
+    transformClass() {
+
     }
 }

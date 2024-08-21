@@ -12,8 +12,9 @@ export interface CSSMangleWebpackPluginOptions {
     ignoreScript?: boolean;
     printLogs?: "all" | "warning" | "none",
     mangle?: {
-        variableName?: boolean
-        className?: boolean
+        variableName?: boolean;
+        className?: boolean;
+        idName?: boolean;
     }
 }
 
@@ -30,10 +31,13 @@ export class CSSMangleWebpackPlugin {
             })
         }
 
+        const useMangleClassName = options?.mangle?.className ?? false;
+        const useMangleIdName = options?.mangle?.idName ?? false;
+
         // When a user want to compress a class-names of CSS.
-        if (options?.mangle?.className ?? false) {
+        if (useMangleClassName || useMangleIdName) {
             this.transpilers.push({
-                declaration: new CSSQueryDeclaration(),
+                declaration: new CSSQueryDeclaration({className: useMangleClassName, idName: useMangleIdName}),
                 reference: new CSSQueryReference(),
                 mangler: new Mangler(),
             });
@@ -57,6 +61,7 @@ export class CSSMangleWebpackPlugin {
                          || assetName.endsWith(".css")) {
                             for (const transpiler of this.transpilers) {
                                 const source = assets[assetName].source().toString();
+
                                 const t1 = transpiler.declaration.transform(source, transpiler.mangler);
                                 const t2 = transpiler.reference.transform(t1, transpiler.mangler);
 
@@ -71,6 +76,7 @@ export class CSSMangleWebpackPlugin {
                     if (this.options?.printLogs == "all" ?? false) {
                         this.transpilers.forEach(e => e.mangler.printLogs());
                     }
+
                     if (this.options?.printLogs == "warning" ?? false) {
                         this.transpilers.forEach(e => e.mangler.printLogsUnused());
                     }
