@@ -59,6 +59,8 @@ export class CSSQueryDeclaration extends ManglerDeclaration {
         // #b:hover
         const ids = `${selectorId}`;
 
+        const ctx = `(\\s+(\\w*(\\.|\\#)${ids})?\\s*)*\\{`;
+
         // This patterns matched by the following are:
         //
         // .a {}
@@ -66,7 +68,7 @@ export class CSSQueryDeclaration extends ManglerDeclaration {
         // .a #b {}
         // .a:hover {}
         // .a:hover #b {}
-        const syntaxText = `(?<=(\\.|\\#))${ids}(?=(\\s+((\\.|\\#)${ids})?\\s*)*\\{)`;
+        const syntaxText = `(?<=(\\.|\\#))${ids}(?=${ctx})`;
         const syntaxList = syntexText.matchAll(new RegExp(syntaxText, "g"));
 
         console.log(syntaxText);
