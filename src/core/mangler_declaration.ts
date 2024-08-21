@@ -25,8 +25,8 @@ export class CSSVariableDeclaration extends ManglerDeclaration {
         // See Also, where "background" is a unique identifier,
         // so any character form is acceptable.
         //
-        const result1 = syntaxText.matchAll(/--[\w-]+(?=\s*: ?.+;)/g);
-        const result2 = syntaxText.matchAll(/(?<=@property )--[a-zA-Z0-9_-]+(?=\s*{[^{}]*})/g);
+        const result1 = syntaxText.matchAll(/--[\w-]+(?=\s*: *.+(;|[\n\s]*}))/g);
+        const result2 = syntaxText.matchAll(/(?<=@property )--[\w-]+(?=\s*{[^{}]*})/g);
         const result = [...result1, ...result2];
         let replacedLength = 0;
 
