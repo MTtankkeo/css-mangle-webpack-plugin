@@ -5,7 +5,7 @@
         <thead>
           <tr>
             <th>Version</th>
-            <th>v1.0.0-alpha2</th>
+            <th>v1.0.0-alpha3</th>
           </tr>
         </tbody>
     </table>
@@ -55,8 +55,12 @@ The example below demonstrates the simplest of many possible transformations. In
   --background: white;
   --foreground: black;
 }
+@property --reaground { ... }
 
-body { background-color: var(--background) }
+body {
+  background-color: var(--background);
+  color: var(--foreground)
+}
 ```
 
 ### To
@@ -65,8 +69,12 @@ body { background-color: var(--background) }
   --a: white;
   --b: black;
 }
+@property --c { ... }
 
-body { background-color: var(--a) }
+body {
+  background-color: var(--a);
+  color: var(--b)
+}
 ```
 
 ## Properties of CSSMangleWebpackPluginOptions
