@@ -33,8 +33,13 @@ export class CSSVariableDeclaration extends ManglerDeclaration {
         for (const global of result) {
             const name = global[0];
             const index = global.index - replacedLength;
-            const newName = mangler.transform(name);
-            const result = StringUtil.replaceRange(syntaxText, index, index + name.length, `--${newName}`);
+            const identifier = mangler.transform(name);
+            const result = StringUtil.replaceRange(
+                syntaxText,
+                index,
+                index + name.length,
+                `--${identifier}`
+            );
 
             replacedLength += syntaxText.length - result.length;
             syntaxText = result;

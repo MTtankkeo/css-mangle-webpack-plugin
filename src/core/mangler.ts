@@ -60,7 +60,7 @@ export class Mangler {
 
     /** Converts input to CSS variable format if it exists in cache. */
     CSSVariableOf(value: string): string {
-        return this.cache.get(value) ? `--${this.transform(value)}` : value;
+        return this.cache.get(value) ? `--${this.transform(value)}` : null;
     }
 
     /**

@@ -33,15 +33,19 @@ export class CSSVariableReference extends ManglerReference {
         for (const regexp of regexps1) {
             const name = regexp[0];
             const index = regexp.index - replacedLength;
-            const result = StringUtil.replaceRange(
-                syntaxText,
-                index,
-                index + name.length,
-                mangler.CSSVariableOf(name)
-            );
+            const identifier = mangler.CSSVariableOf(name);
 
-            replacedLength += syntaxText.length - result.length;
-            syntaxText = result;
+            if (identifier) {
+                const result = StringUtil.replaceRange(
+                    syntaxText,
+                    index,
+                    index + name.length,
+                    identifier
+                );
+
+                replacedLength += syntaxText.length - result.length;
+                syntaxText = result;
+            }
         }
 
         for (const global of regexps2) {
@@ -51,15 +55,19 @@ export class CSSVariableReference extends ManglerReference {
             for (const local of locals) {
                 const name = local[0];
                 const index = (globalIndex + local.index) - replacedLength;
-                const result = StringUtil.replaceRange(
-                    syntaxText,
-                    index,
-                    index + name.length,
-                    mangler.CSSVariableOf(name)
-                )
+                const identifier = mangler.CSSVariableOf(name);
 
-                replacedLength += syntaxText.length - result.length;
-                syntaxText = result;
+                if (identifier) {
+                    const result = StringUtil.replaceRange(
+                        syntaxText,
+                        index,
+                        index + name.length,
+                        identifier
+                    );
+
+                    replacedLength += syntaxText.length - result.length;
+                    syntaxText = result;
+                }
             }
         }
 
