@@ -47,9 +47,7 @@ export class CSSVariableDeclaration extends ManglerDeclaration {
 export class CSSQueryDeclaration extends ManglerDeclaration {
     transform(syntexText: string, mangler: Mangler): string {
         // this syntex is a pseudo-class of CSS.
-        const pesudoClass = /(?:[a-zA-Z0-9_-]*|(:|::)[a-zA-Z0-9_\-\(\)]*)/.source;
-
-        const combinator = /[]/.source;
+        const pesudoClass = /((:|::)?[\w]+(\([\w='"]+\))?)?/.source;
 
         // This syntax is a selector identifier that is like .a and #b
         const selectorId = /(?<=(\.|\#))[a-zA-Z0-9_-]+/.source;
@@ -68,7 +66,7 @@ export class CSSQueryDeclaration extends ManglerDeclaration {
         // .a #b {}
         // .a:hover {}
         // .a:hover #b {}
-        const syntaxText = /(?<=(\.|\#))[a-zA-Z0-9_-]+(?=\s*((.|#)\w)?\s*{)/.source;
+        const syntaxText = /(?<=(\.|\#))[a-zA-Z0-9_-]+(?=(\s+((\.|\#)[a-zA-Z0-9_-]+)?\s*)*\{)/.source;
         const syntaxList = syntexText.matchAll(new RegExp(syntaxText, "g"));
 
         console.log(syntaxText);
