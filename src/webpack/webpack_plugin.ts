@@ -1,7 +1,7 @@
 import { Compiler } from "webpack";
-import { ManglerTranspiler } from "../core/mangler_transpiler";
-import { CSSQueryDeclaration, CSSVariableDeclaration } from "../core/mangler_declaration";
-import { CSSQueryReference, CSSVariableReference } from "../core/mangler_reference";
+import { CSSQueryManglerTranspiler, CSSVariableManglerTranspiler, DrivenManglerTranspiler, ManglerTranspiler } from "../core/mangler_transpiler";
+import { CSSQueryDeclaration } from "../core/mangler_declaration";
+import { CSSQueryReference } from "../core/mangler_reference";
 import { Mangler } from "../core/mangler";
 
 export interface CSSMangleWebpackPluginOptions {
@@ -10,37 +10,40 @@ export interface CSSMangleWebpackPluginOptions {
      * targets for transpilation.
      */
     ignoreScript?: boolean;
+    useStrict?: boolean,
     printLogs?: "all" | "warning" | "none",
+    reserved?: string[] | RegExp[],
     mangle?: {
         variableName?: boolean;
         className?: boolean;
         idName?: boolean;
-    }
+    } | boolean
 }
 
 export class CSSMangleWebpackPlugin {
-    transpilers: ManglerTranspiler[] = [];
+    transpilers: DrivenManglerTranspiler[] = [];
 
     constructor(public options: CSSMangleWebpackPluginOptions) {
-        // When a user want to compress a variable names of CSS.
-        if (options?.mangle?.variableName ?? true) {
-            this.transpilers.push({
-                declaration: new CSSVariableDeclaration(),
-                reference: new CSSVariableReference(),
-                mangler: new Mangler(),
-            })
+        // When is not active to compress about the identifiers of CSS.
+        if (!(options?.mangle ?? true)) return;
+
+        /** @ts-ignore */
+        const variableName: boolean = options?.mangle?.variableName;
+
+        /** @ts-ignore */
+        const className: boolean = options?.mangle?.className;
+
+        /** @ts-ignore */
+        const idName: boolean = options?.mangle?.idName;
+
+        // When a developer want to compress a variable names of CSS.
+        if (variableName ?? true) {
+            this.transpilers.push(new CSSVariableManglerTranspiler());
         }
 
-        const useMangleClassName = options?.mangle?.className ?? false;
-        const useMangleIdName = options?.mangle?.idName ?? false;
-
-        // When a user want to compress a class-names of CSS.
-        if (useMangleClassName || useMangleIdName) {
-            this.transpilers.push({
-                declaration: new CSSQueryDeclaration({className: useMangleClassName, idName: useMangleIdName}),
-                reference: new CSSQueryReference(),
-                mangler: new Mangler(),
-            });
+        // When a developer want to compress a class-names of CSS.
+        if ((className ?? false) || (idName ?? false)) {
+            this.transpilers.push(new CSSQueryManglerTranspiler());
         }
     }
 
@@ -62,23 +65,20 @@ export class CSSMangleWebpackPlugin {
                             for (const transpiler of this.transpilers) {
                                 const source = assets[assetName].source().toString();
 
-                                const t1 = transpiler.declaration.transform(source, transpiler.mangler);
-                                const t2 = transpiler.reference.transform(t1, transpiler.mangler);
-
                                 compilation.updateAsset(
                                     assetName,
-                                    new compiler.webpack.sources.RawSource(t2)
+                                    new compiler.webpack.sources.RawSource(transpiler.transform(source))
                                 );
                             }
                         }
                     }
 
                     if (this.options?.printLogs == "all" ?? false) {
-                        this.transpilers.forEach(e => e.mangler.printLogs());
+                        this.transpilers.forEach(e => e.manglers.forEach(m => m.printLogs()));
                     }
 
                     if (this.options?.printLogs == "warning" ?? false) {
-                        this.transpilers.forEach(e => e.mangler.printLogsUnused());
+                        this.transpilers.forEach(e => e.manglers.forEach(m => m.printLogsUnused()));
                     }
                 }
             );

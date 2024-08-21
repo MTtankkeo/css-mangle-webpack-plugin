@@ -1,16 +1,53 @@
 import { Mangler } from "./mangler";
-import { ManglerDeclaration } from "./mangler_declaration";
-import { ManglerReference } from "./mangler_reference";
+import { CSSQueryDeclaration, CSSVariableDeclaration, ManglerDeclaration } from "./mangler_declaration";
+import { CSSQueryReference, CSSVariableReference, ManglerReference } from "./mangler_reference";
 
-/**
- * Defines the structure for a Mangler transpiler,
- * including declaration and reference handlers.
- */
-export interface ManglerTranspiler {
-    /** Handles the declaration of mangled identifiers */
-    declaration: ManglerDeclaration;
-    /** Manages references to mangled identifiers */
-    reference: ManglerReference;
-    /** The Mangler instance for string transformation. */
-    mangler: Mangler;
+export abstract class ManglerTranspiler {
+    abstract createManglerDeclaration(): ManglerDeclaration;
+    abstract createManglerReference(): ManglerReference;
+    abstract createMangler(): Mangler;
+    abstract transform(syntaxText: string): string;
+}
+
+export abstract class DrivenManglerTranspiler extends ManglerTranspiler {
+    manglers: Mangler[] = [];
+
+    createMangler(): Mangler {
+        const instance = new Mangler();
+        return this.manglers.push(instance), instance;
+    }
+}
+
+export class CSSVariableManglerTranspiler extends DrivenManglerTranspiler {
+    createManglerDeclaration(): ManglerDeclaration {
+        return new CSSVariableDeclaration();
+    }
+
+    createManglerReference(): ManglerReference {
+        return new CSSVariableReference();
+    }
+
+    transform(syntaxText: string): string {
+        const mangler = this.manglers[0] ?? this.createMangler();
+        const t1 = this.createManglerDeclaration().transform(syntaxText, mangler);
+        const t2 = this.createManglerReference().transform(t1, mangler);
+        return t2;
+    }
+}
+
+export class CSSQueryManglerTranspiler extends DrivenManglerTranspiler {
+    createManglerDeclaration(): ManglerDeclaration {
+        return new CSSQueryDeclaration();
+    }
+
+    createManglerReference(): ManglerReference {
+        return new CSSQueryReference();
+    }
+
+    transform(syntaxText: string): string {
+        const mangler = this.manglers[0] ?? this.createMangler();
+        const t1 = this.createManglerDeclaration().transform(syntaxText, mangler);
+        const t2 = this.createManglerReference().transform(t1, mangler);
+        return t2;
+    }
 }

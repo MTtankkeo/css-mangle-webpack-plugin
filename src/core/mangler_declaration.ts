@@ -49,16 +49,7 @@ export class CSSVariableDeclaration extends ManglerDeclaration {
     }
 }
 
-export interface CSSQueryDeclarationOptions {
-    className: boolean;
-    idName: boolean;
-}
-
 export class CSSQueryDeclaration extends ManglerDeclaration {
-    constructor(options: CSSQueryDeclarationOptions) {
-        super();
-    }
-
     transform(syntaxText: string, mangler: Mangler): string {
         // this syntex is a pseudo-class of CSS.
         const pesudoClass = /((:|::)\w+(\([\w='"]+\))?)?/.source;

@@ -9,12 +9,7 @@ export declare class CSSVariableDeclaration extends ManglerDeclaration {
      */
     transform(syntaxText: string, mangler: Mangler): string;
 }
-export interface CSSQueryDeclarationOptions {
-    className: boolean;
-    idName: boolean;
-}
 export declare class CSSQueryDeclaration extends ManglerDeclaration {
-    constructor(options: CSSQueryDeclarationOptions);
     transform(syntaxText: string, mangler: Mangler): string;
     transformId(): void;
     transformClass(): void;
