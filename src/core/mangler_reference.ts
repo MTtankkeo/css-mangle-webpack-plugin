@@ -31,7 +31,7 @@ export class CSSVariableReference extends ManglerReference {
 
         for (const regexp of regexps) {
             const name = regexp[0];
-            const index = regexp.index - replacedLength;
+            const index = regexp.index + replacedLength;
             const identifier = mangler.CSSVariableOf(name);
 
             if (identifier) {
@@ -42,7 +42,7 @@ export class CSSVariableReference extends ManglerReference {
                     identifier
                 );
 
-                replacedLength += syntaxText.length - result.length;
+                replacedLength -= StringUtil.replacedLength(syntaxText, result);
                 syntaxText = result;
             }
         }
@@ -66,7 +66,7 @@ export class CSSVariableReference extends ManglerReference {
 
             for (const local of locals) {
                 const name = local[0];
-                const index = (globalIndex + local.index) - replacedLength;
+                const index = (globalIndex + local.index) + replacedLength;
                 const identifier = mangler.CSSVariableOf(name);
 
                 if (identifier) {
@@ -77,7 +77,7 @@ export class CSSVariableReference extends ManglerReference {
                         identifier
                     );
 
-                    replacedLength += syntaxText.length - result.length;
+                    replacedLength -= StringUtil.replacedLength(syntaxText, result);
                     syntaxText = result;
                 }
             }

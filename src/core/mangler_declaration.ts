@@ -3,6 +3,15 @@ import { Mangler } from "./mangler";
 
 export abstract class ManglerDeclaration {
     abstract transform(syntaxText: string, mangler: Mangler): string;
+
+    /**  */
+    private updateReplacedLength(
+        replacedLength: number,
+        originalText: string,
+        newText: string
+    ): number {
+        return replacedLength + (originalText.length - newText.length);
+    }
 }
 
 export class CSSVariableDeclaration extends ManglerDeclaration {
@@ -32,7 +41,7 @@ export class CSSVariableDeclaration extends ManglerDeclaration {
 
         for (const global of result) {
             const name = global[0];
-            const index = global.index - replacedLength;
+            const index = global.index + replacedLength;
             const identifier = mangler.transform(name);
             const result = StringUtil.replaceRange(
                 syntaxText,
@@ -41,7 +50,7 @@ export class CSSVariableDeclaration extends ManglerDeclaration {
                 `--${identifier}`
             );
 
-            replacedLength += syntaxText.length - result.length;
+            replacedLength -= StringUtil.replacedLength(syntaxText, result);
             syntaxText = result;
         }
 
