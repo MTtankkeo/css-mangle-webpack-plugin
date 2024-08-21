@@ -7,6 +7,7 @@ export declare abstract class ManglerTranspiler {
     abstract createMangler(): Mangler;
     abstract transform(syntaxText: string): string;
 }
+/** This class provides functions in general use for the foundation of this package. */
 export declare abstract class DrivenManglerTranspiler extends ManglerTranspiler {
     manglers: Mangler[];
     createMangler(): Mangler;

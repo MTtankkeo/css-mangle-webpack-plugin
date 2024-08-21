@@ -1,13 +1,16 @@
 /**
- * Signature for the interface that is an object with original and
- * transformed names and a reference count.
+ * Signature for the interface that is an object about mangler
+ * with original and transformed names and a reference count.
  */
 export interface ManglerObject {
     originalName: string;
     identifierName: string;
     referenceCount: number;
 }
-/** Manages the transformation of strings into unique identifiers for compressing. */
+/**
+ * This class declared to replace long unique identifiers
+ * with short identifier names in general.
+*/
 export declare class Mangler {
     /** This static value that is defining chars of about a base-26. */
     static chars: string;
@@ -21,10 +24,17 @@ export declare class Mangler {
      * Generates a unique name using a base-26 system based on
      * a given a unique count number.
      */
-    createName(count?: number): string;
-    /** Transforms input string to a unique identifier, caching the result. */
+    createIdentifierName(count?: number): string;
+    /**
+     * Transforms input string to a new unique identifier,
+     * caching the result, and returns it.
+     */
     transform(from: string): string;
-    /** Converts input to CSS variable format if it exists in cache. */
+    get unused(): ManglerObject[];
+    /**
+     * Returns a short unique identifier if a short unique identifier for
+     * a given unique identifier has already been created and exists.
+    */
     CSSVariableOf(value: string): string;
     /**
      * Prints the informations of all about this mangler.

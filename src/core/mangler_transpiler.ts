@@ -9,6 +9,7 @@ export abstract class ManglerTranspiler {
     abstract transform(syntaxText: string): string;
 }
 
+/** This class provides functions in general use for the foundation of this package. */
 export abstract class DrivenManglerTranspiler extends ManglerTranspiler {
     manglers: Mangler[] = [];
 
