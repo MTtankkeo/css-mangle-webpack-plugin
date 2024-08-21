@@ -2,11 +2,11 @@ import { StringUtil } from "../utils/string";
 import { Mangler } from "./mangler";
 
 export abstract class ManglerReference {
-    abstract transform(syntexText: string, mangler: Mangler): string;
+    abstract transform(syntaxText: string, mangler: Mangler): string;
 }
 
 export class CSSVariableReference extends ManglerReference {
-    transform(syntexText: string, mangler: Mangler) {
+    transform(syntaxText: string, mangler: Mangler) {
         // References to CSS variables generally have a unique syntax,
         // but it can vary in different environments.
         //
@@ -19,14 +19,14 @@ export class CSSVariableReference extends ManglerReference {
         // - "--background"
         // - '--foreground'
         //
-        const regexps1 = syntexText.matchAll(/(?<="|')--[\w-]+(?=\\?\"|')/g);
+        const regexps1 = syntaxText.matchAll(/(?<="|')--[\w-]+(?=\\?\"|')/g);
 
         // This patterns matched by the following are:
         //
         // - var(--background, rgb(255, 255, 255))
         // - var(--foreground)
         //
-        const regexps2 = syntexText.matchAll(/(?<=var\()[^()]*(?:\([^\)]*\)[^()]*)*(?=\))/g);
+        const regexps2 = syntaxText.matchAll(/(?<=var\()[^()]*(?:\([^\)]*\)[^()]*)*(?=\))/g);
 
         let replacedLength = 0;
 
@@ -34,14 +34,14 @@ export class CSSVariableReference extends ManglerReference {
             const name = regexp[0];
             const index = regexp.index - replacedLength;
             const result = StringUtil.replaceRange(
-                syntexText,
+                syntaxText,
                 index,
                 index + name.length,
                 mangler.CSSVariableOf(name)
             );
 
-            replacedLength += syntexText.length - result.length;
-            syntexText = result;
+            replacedLength += syntaxText.length - result.length;
+            syntaxText = result;
         }
 
         for (const global of regexps2) {
@@ -52,18 +52,18 @@ export class CSSVariableReference extends ManglerReference {
                 const name = local[0];
                 const index = (globalIndex + local.index) - replacedLength;
                 const result = StringUtil.replaceRange(
-                    syntexText,
+                    syntaxText,
                     index,
                     index + name.length,
                     mangler.CSSVariableOf(name)
                 )
 
-                replacedLength += syntexText.length - result.length;
-                syntexText = result;
+                replacedLength += syntaxText.length - result.length;
+                syntaxText = result;
             }
         }
 
-        return syntexText;
+        return syntaxText;
     }
 }
 

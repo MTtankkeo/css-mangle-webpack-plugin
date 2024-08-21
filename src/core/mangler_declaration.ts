@@ -2,7 +2,7 @@ import { StringUtil } from "../utils/string";
 import { Mangler } from "./mangler";
 
 export abstract class ManglerDeclaration {
-    abstract transform(syntexText: string, mangler: Mangler): string;
+    abstract transform(syntaxText: string, mangler: Mangler): string;
 }
 
 export class CSSVariableDeclaration extends ManglerDeclaration {
@@ -10,7 +10,7 @@ export class CSSVariableDeclaration extends ManglerDeclaration {
      * Parse a given syntex strings and based on declare identifier
      * name to [Mangler].
      */
-    transform(syntexText: string, mangler: Mangler): string {
+    transform(syntaxText: string, mangler: Mangler): string {
         // In CSS variable declarations, a unique syntax is generally used,
         // making identification relatively straightforward.
         //
@@ -25,41 +25,38 @@ export class CSSVariableDeclaration extends ManglerDeclaration {
         // See Also, where "background" is a unique identifier,
         // so any character form is acceptable.
         //
-        const syntax1 = syntexText.matchAll(/--[\w-]+(?=\s*: ?.+;)/g);
-        const syntax2 = syntexText.matchAll(/(?<=@property )--[a-zA-Z0-9_-]+(?=\s*{[^{}]*})/g);
-        const syntaxs = [...syntax1, ...syntax2];
+        const result1 = syntaxText.matchAll(/--[\w-]+(?=\s*: ?.+;)/g);
+        const result2 = syntaxText.matchAll(/(?<=@property )--[a-zA-Z0-9_-]+(?=\s*{[^{}]*})/g);
+        const result = [...result1, ...result2];
         let replacedLength = 0;
 
-        for (const regexp of syntaxs) {
-            const name = regexp[0];
-            const index = regexp.index - replacedLength;
+        for (const global of result) {
+            const name = global[0];
+            const index = global.index - replacedLength;
             const newName = mangler.transform(name);
-            const result = StringUtil.replaceRange(syntexText, index, index + name.length, `--${newName}`);
+            const result = StringUtil.replaceRange(syntaxText, index, index + name.length, `--${newName}`);
 
-            replacedLength += syntexText.length - result.length;
-            syntexText = result;
+            replacedLength += syntaxText.length - result.length;
+            syntaxText = result;
         }
 
-        return syntexText;
+        return syntaxText;
     }
 }
 
 export class CSSQueryDeclaration extends ManglerDeclaration {
-    transform(syntexText: string, mangler: Mangler): string {
+    transform(syntaxText: string, mangler: Mangler): string {
         // this syntex is a pseudo-class of CSS.
-        const pesudoClass = /((:|::)?[\w]+(\([\w='"]+\))?)?/.source;
+        const pesudoClass = /((:|::)\w+(\([\w='"]+\))?)?/.source;
 
-        // This syntax is a selector identifier that is like .a and #b
-        const selectorId = /[a-zA-Z0-9_-]+/.source;
+        // This syntax matches className IdName that is a selector identifier that is like .a and #b
+        const selectorCIPart = /(\.|.#)[a-zA-Z0-9_-]+/.source;
+        const selectorCI = `${selectorCIPart}${pesudoClass}`;
 
-        // This syntax is a selector identifier that is like:
-        // .a
-        // #b
-        // .a:hover
-        // #b:hover
-        const ids = `${selectorId}`;
+        const selectorIdPart = /(\.|.#)?[a-zA-Z0-0_-]+/.source;
+        const selectorId = `${selectorIdPart}${pesudoClass}`;
 
-        const ctx = `(\\s+(\\w*((\\.|\\#)${ids})?)\\s*)*\\{`;
+        const contextBehind = `\\s+(\\w*(${selectorId})?)\\s*`;
 
         // This patterns matched by the following are:
         //
@@ -68,15 +65,15 @@ export class CSSQueryDeclaration extends ManglerDeclaration {
         // .a #b {}
         // .a:hover {}
         // .a:hover #b {}
-        const syntaxText = `(?<=(\\.|\\#))${ids}(?=${ctx})`;
-        const syntaxList = syntexText.matchAll(new RegExp(syntaxText, "g"));
+        const regexpText = `${selectorCI}(?=(${contextBehind})*\\{)`;
 
-        console.log(syntaxText);
+        console.log(regexpText);
+        const regexpList = syntaxText.matchAll(new RegExp(regexpText, "g"));
 
-        for (const global of syntaxList) {
+        for (const global of regexpList) {
             console.log(global[0])
         }
 
-        return syntexText;
+        return syntaxText;
     }
 }
