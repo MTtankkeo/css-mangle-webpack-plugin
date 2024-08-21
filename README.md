@@ -5,7 +5,7 @@
         <thead>
           <tr>
             <th>Version</th>
-            <th>v1.0.0-alpha3</th>
+            <th>v1.0.0-alpha4</th>
           </tr>
         </tbody>
     </table>
@@ -17,7 +17,7 @@ This webpack plugin package is a CSS mangler that globally optimizes and shorten
 > in brief, It primarily converts identifiers used in CSS (e.g., variables, class names, IDs) into shorter names to reduce file size and improve performance. 🚀
 
 > [!IMPORTANT]
-> This package is more developing and fixing..., And this package current version is alpha.
+> This package is more developing and fixing..., And this package current version is alpha. And refer to [Change Log](CHANGELOG.md) for details.
 
 ## Support Current Status
 | Type | Status | Support |

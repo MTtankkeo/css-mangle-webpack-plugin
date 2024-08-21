@@ -7,6 +7,12 @@ export abstract class ManglerReference {
 
 export class CSSVariableReference extends ManglerReference {
     transform(syntaxText: string, mangler: Mangler) {
+        const t1 = this.transformLiteral(syntaxText, mangler);
+        const t2 = this.transformProperty(t1, mangler);
+        return t2;
+    }
+    
+    transformLiteral(syntaxText: string, mangler: Mangler) {
         // References to CSS variables generally have a unique syntax,
         // but it can vary in different environments.
         //
@@ -20,13 +26,6 @@ export class CSSVariableReference extends ManglerReference {
         // - '--foreground'
         //
         const regexps1 = syntaxText.matchAll(/(?<="|')--[\w-]+(?=\\?\"|')/g);
-
-        // This patterns matched by the following are:
-        //
-        // - var(--background, rgb(255, 255, 255))
-        // - var(--foreground)
-        //
-        const regexps2 = syntaxText.matchAll(/(?<=var\()[^()]*(?:\([^\)]*\)[^()]*)*(?=\))/g);
 
         let replacedLength = 0;
 
@@ -47,6 +46,19 @@ export class CSSVariableReference extends ManglerReference {
                 syntaxText = result;
             }
         }
+
+        return syntaxText;
+    }
+
+    transformProperty(syntaxText: string, mangler: Mangler) {
+        // This patterns matched by the following are:
+        //
+        // - var(--background, rgb(255, 255, 255))
+        // - var(--foreground)
+        //
+        const regexps2 = syntaxText.matchAll(/(?<=var\()[^()]*(?:\([^\)]*\)[^()]*)*(?=\))/g);
+
+        let replacedLength = 0;
 
         for (const global of regexps2) {
             const locals = global[0].matchAll(/--[\w-]+/g); // split

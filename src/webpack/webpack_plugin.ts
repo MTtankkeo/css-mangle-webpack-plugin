@@ -51,7 +51,7 @@ export class CSSMangleWebpackPlugin {
             compilation.hooks.processAssets.tap(
                 {
                     name: "CSSMangleWebpackPlugin",
-                    stage: compiler.webpack.Compilation.PROCESS_ASSETS_STAGE_OPTIMIZE
+                    stage: compiler.webpack.Compilation.PROCESS_ASSETS_STAGE_OPTIMIZE_SIZE
                 },
                 (assets) => {
                     for (const assetName in assets) {
