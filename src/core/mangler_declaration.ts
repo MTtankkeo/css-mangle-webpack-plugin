@@ -52,14 +52,14 @@ export class CSSQueryDeclaration extends ManglerDeclaration {
         const combinator = /[]/.source;
 
         // This syntax is a selector identifier that is like .a and #b
-        const selectorId = /[a-zA-Z0-9_-](?:\[[\w="']+\]|)/.source;
+        const selectorId = /(?<=(\.|\#))[a-zA-Z0-9_-]+/.source;
 
         // This syntax is a selector identifier that is like:
         // .a
         // #b
         // .a:hover
         // #b:hover
-        const ids = `${selectorId}${pesudoClass}`;
+        const ids = `${selectorId}`;
 
         // This patterns matched by the following are:
         //
@@ -68,7 +68,7 @@ export class CSSQueryDeclaration extends ManglerDeclaration {
         // .a #b {}
         // .a:hover {}
         // .a:hover #b {}
-        const syntaxText = `(?<=\\.|#)${ids}(?=(\\s*|\\s?\\w*(\\.|#)${ids}\\s*){[^{}]*})`;
+        const syntaxText = /(?<=(\.|\#))[a-zA-Z0-9_-]+(?=\s*((.|#)\w)?\s*{)/.source;
         const syntaxList = syntexText.matchAll(new RegExp(syntaxText, "g"));
 
         console.log(syntaxText);
