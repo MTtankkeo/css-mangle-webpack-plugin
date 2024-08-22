@@ -1,19 +1,23 @@
 import { Compiler } from "webpack";
-import { DrivenManglerTranspiler } from "../core/mangler_transpiler";
+import { CSSVariableManglerOptions, DrivenManglerTranspiler } from "../core/mangler_transpiler";
 export interface CSSMangleWebpackPluginOptions {
     /**
      * Whether unique identifiers in JavaScript and JSX should not be
      * targets for transpilation.
      */
     ignoreScript?: boolean;
-    bundleStage?: "before" | "behind";
-    printLogs?: "all" | "warning" | "none";
-    reserved?: string[] | RegExp[];
-    mangle?: {
-        variableName?: boolean;
+    /**
+     * This option value defines which bundle process stage of Webpack
+     * to proceed with optimization task.
+     */
+    processStage?: "OPTIMIZE" | "OPTIMIZE_INLINE";
+    printLogs?: "ALL" | "WARNING" | "NONE";
+    reserved?: string[];
+    mangle?: boolean | {
+        variableName?: boolean | CSSVariableManglerOptions;
         className?: boolean;
         idName?: boolean;
-    } | boolean;
+    };
 }
 export declare class CSSMangleWebpackPlugin {
     options: CSSMangleWebpackPluginOptions;

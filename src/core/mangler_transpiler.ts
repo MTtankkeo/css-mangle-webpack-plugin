@@ -19,13 +19,22 @@ export abstract class DrivenManglerTranspiler extends ManglerTranspiler {
     }
 }
 
+export interface CSSVariableManglerOptions {
+    property: boolean;
+    literals: boolean;
+}
+
 export class CSSVariableManglerTranspiler extends DrivenManglerTranspiler {
+    constructor(public options: CSSVariableManglerOptions) {
+        super();
+    }
+
     createManglerDeclaration(): ManglerDeclaration {
         return new CSSVariableDeclaration();
     }
 
     createManglerReference(): ManglerReference {
-        return new CSSVariableReference();
+        return new CSSVariableReference(this.options);
     }
 
     transform(syntaxText: string): string {

@@ -1,8 +1,6 @@
 import { Mangler } from "./mangler";
 export declare abstract class ManglerDeclaration {
     abstract transform(syntaxText: string, mangler: Mangler): string;
-    /**  */
-    private updateReplacedLength;
 }
 export declare class CSSVariableDeclaration extends ManglerDeclaration {
     /**

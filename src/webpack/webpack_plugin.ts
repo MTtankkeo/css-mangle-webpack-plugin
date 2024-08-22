@@ -1,5 +1,5 @@
 import { Compiler } from "webpack";
-import { CSSQueryManglerTranspiler, CSSVariableManglerTranspiler, DrivenManglerTranspiler } from "../core/mangler_transpiler";
+import { CSSQueryManglerTranspiler, CSSVariableManglerOptions, CSSVariableManglerTranspiler, DrivenManglerTranspiler } from "../core/mangler_transpiler";
 
 export interface CSSMangleWebpackPluginOptions {
     /**
@@ -14,11 +14,11 @@ export interface CSSMangleWebpackPluginOptions {
     processStage?: "OPTIMIZE" | "OPTIMIZE_INLINE";
     printLogs?: "ALL" | "WARNING" | "NONE";
     reserved?: string[],
-    mangle?: {
-        variableName?: boolean;
+    mangle?: boolean | {
+        variableName?: boolean | CSSVariableManglerOptions;
         className?: boolean;
         idName?: boolean;
-    } | boolean;
+    };
 }
 
 export class CSSMangleWebpackPlugin {
@@ -29,17 +29,22 @@ export class CSSMangleWebpackPlugin {
         if (!(options?.mangle ?? true)) return;
 
         /** @ts-ignore */
-        const variableName: boolean = options?.mangle?.variableName;
+        const variableName: boolean = options?.mangle?.variableName ?? true;
 
         /** @ts-ignore */
-        const className: boolean = options?.mangle?.className;
+        const className: boolean = options?.mangle?.className ?? false;
 
         /** @ts-ignore */
-        const idName: boolean = options?.mangle?.idName;
+        const idName: boolean = options?.mangle?.idName ?? false;
 
         // When a developer want to compress a variable names of CSS.
-        if (variableName ?? true) {
-            this.transpilers.push(new CSSVariableManglerTranspiler());
+        if (variableName === true
+         || variableName["property"] != null
+         || variableName["literals"] != null) {
+            this.transpilers.push(new CSSVariableManglerTranspiler({
+                property: variableName["property"] ?? true,
+                literals: variableName["literals"] ?? true
+            }));
         }
 
         // When a developer want to compress a class-names of CSS.
@@ -50,7 +55,7 @@ export class CSSMangleWebpackPlugin {
 
     apply(compiler: Compiler) {
         const useMangleScript = !(this.options?.ignoreScript ?? false);
-        const processStage = this.options?.processStage ?? "behind";
+        const processStage = this.options?.processStage ?? "OPTIMIZE_INLINE";
         const reversed = this.options?.reserved ?? [];
 
         compiler.hooks.compilation.tap("CSSMangleWebpackPlugin", (compilation) => {

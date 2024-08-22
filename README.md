@@ -96,4 +96,4 @@ const property2 = "--a";
 | processStage | This option value defines which bundle process stage of Webpack to proceed with optimization task. | "OPTIMIZE" \| "OPTIMIZE_INLINE";
 | printLogs | Not ready a comment about this. | "ALL" \| "WARNING" \| "NONE",
 | reserved | Not ready a comment about this. | string[]
-| mangle | Not ready a comment about this. | { variableName?: boolean, className?: boolean, idName?: boolean } \| boolean
+| mangle | Not ready a comment about this. | { variableName?: boolean | CSSVariableManglerOptions, className?: boolean, idName?: boolean } \| boolean

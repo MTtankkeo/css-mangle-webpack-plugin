@@ -12,7 +12,13 @@ export declare abstract class DrivenManglerTranspiler extends ManglerTranspiler 
     manglers: Mangler[];
     createMangler(): Mangler;
 }
+export interface CSSVariableManglerOptions {
+    property: boolean;
+    literals: boolean;
+}
 export declare class CSSVariableManglerTranspiler extends DrivenManglerTranspiler {
+    options: CSSVariableManglerOptions;
+    constructor(options: CSSVariableManglerOptions);
     createManglerDeclaration(): ManglerDeclaration;
     createManglerReference(): ManglerReference;
     transform(syntaxText: string): string;

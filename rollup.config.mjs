@@ -2,11 +2,11 @@ import typescript from "rollup-plugin-typescript2";
 import terser from "@rollup/plugin-terser";
 
 const plugins = [
+    terser(),
     typescript({
         tsconfig: "./tsconfig.json",
         useTsconfigDeclarationDir: true
-    }),
-    terser()
+    })
 ]
 
 /** @type {import("rollup").RollupOptions} */

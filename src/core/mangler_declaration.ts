@@ -3,15 +3,6 @@ import { Mangler } from "./mangler";
 
 export abstract class ManglerDeclaration {
     abstract transform(syntaxText: string, mangler: Mangler): string;
-
-    /**  */
-    private updateReplacedLength(
-        replacedLength: number,
-        originalText: string,
-        newText: string
-    ): number {
-        return replacedLength + (originalText.length - newText.length);
-    }
 }
 
 export class CSSVariableDeclaration extends ManglerDeclaration {

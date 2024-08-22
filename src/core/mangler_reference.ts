@@ -1,14 +1,19 @@
 import { StringUtil } from "../utils/string";
 import { Mangler } from "./mangler";
+import { CSSVariableManglerOptions } from "./mangler_transpiler";
 
 export abstract class ManglerReference {
     abstract transform(syntaxText: string, mangler: Mangler): string;
 }
 
 export class CSSVariableReference extends ManglerReference {
+    constructor(public options: CSSVariableManglerOptions) {
+        super();
+    }
+
     transform(syntaxText: string, mangler: Mangler) {
-        const t1 = this.transformLiteral(syntaxText, mangler);
-        const t2 = this.transformProperty(t1, mangler);
+        const t1 = this.options.literals ? this.transformLiteral(syntaxText, mangler) : syntaxText;
+        const t2 = this.options.property ? this.transformProperty(t1, mangler) : t1;
         return t2;
     }
 
@@ -19,7 +24,7 @@ export class CSSVariableReference extends ManglerReference {
         // Additionally, referencing variables is common not only in CSS-related files,
         // but also in script environments like `JS`, `JSX`, or bundled package scripts
         // where CSS variables might be declared or referenced.
-        // 
+        //
         // This patterns matched by the following are:
         //
         // - "--background"
