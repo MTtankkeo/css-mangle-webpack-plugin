@@ -23,8 +23,9 @@ This webpack plugin package is a CSS mangler that globally optimizes and shorten
 | Type | Status | Support |
 | ---- | ------ | ------- |
 | Variable | Alpha and tested for required dev-enviorment | ✅ |
-| Class | Not supported | 🟥 |
-| Id | Not supported | 🟥 |
+| Class | Not supported by default currently, but experimental stage. | 🟧 |
+| Id | Not supported by default currently, but experimental stage. | 🟧 |
+| Others | Not supported | 🟥 |
 
 # Install by NPM
 To install this package in your project, enter the following command.
