@@ -94,7 +94,9 @@ export class CSSVariableReference extends ManglerReference {
 
 export class CSSQueryReference extends ManglerReference<CSSQueryManglerContext> {
     transform(syntaxText: string, context: CSSQueryManglerContext): string {
-        return this.transformHTML(syntaxText, context);
+        const t1 = this.transformHTML(syntaxText, context);
+        const t2 = this.transformObject(t1, context);
+        return t2;
     }
 
     transformHTML(syntaxText: string, context: CSSQueryManglerContext): string {
@@ -108,7 +110,7 @@ export class CSSQueryReference extends ManglerReference<CSSQueryManglerContext> 
         const createPropertyObject = (regexp: RegExpExecArray, prefix: string, mangler: Mangler) => {
             return {name: regexp[0], index: regexp.index, prefix, mangler};
         }
-        
+
         const cProperties = Array.from(cRegexps).map(r => createPropertyObject(r, ".", context.classMangler));
         const iProperties = Array.from(iRegexps).map(r => createPropertyObject(r, "#", context.idMangler));
         const properties = [...cProperties, ...iProperties];
@@ -137,6 +139,17 @@ export class CSSQueryReference extends ManglerReference<CSSQueryManglerContext> 
                 }
             }
         }
+
+        return syntaxText;
+    }
+
+    transformObject(syntaxText: string, context: CSSQueryManglerContext): string { // for JSX
+        const getPropertyRegexps = (name: string) => {
+            return new RegExp(`(?<=\\{.*${name}:\\s*['"])[\\w\\s-]+(?=['"].*\\})`, "g");
+        }
+
+        const cProperties = syntaxText.matchAll(getPropertyRegexps("className"));
+        const iProperties = syntaxText.matchAll(getPropertyRegexps("id"));
 
         return syntaxText;
     }

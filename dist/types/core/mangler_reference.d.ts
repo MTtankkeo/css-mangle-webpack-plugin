@@ -13,4 +13,5 @@ export declare class CSSVariableReference extends ManglerReference {
 export declare class CSSQueryReference extends ManglerReference<CSSQueryManglerContext> {
     transform(syntaxText: string, context: CSSQueryManglerContext): string;
     transformHTML(syntaxText: string, context: CSSQueryManglerContext): string;
+    transformObject(syntaxText: string, context: CSSQueryManglerContext): string;
 }
