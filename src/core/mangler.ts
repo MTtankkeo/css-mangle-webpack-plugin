@@ -14,8 +14,17 @@ export interface ManglerObject {
  * with short identifier names in general.
 */
 export class Mangler {
-    /** This static value that is defining chars of about a base-26. */
-    static chars = "abcdefghijklmnopqrstuvwxyz";
+    /** This static value that is defining lower-case alphabets of about a base-26. */
+    static lowerCases = "abcdefghijklmnopqrstuvwxyz";
+
+    /** This static value that is defining upper-case alphabets of about a base-26. */
+    static upperCases = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+    /**
+     * This static value that is defining lower-case and upper-case
+     * alphabets of about a base-26.
+     */
+    static letterCases = this.lowerCases + this.upperCases;
 
     /**
      * This value that is defining a value that increases each when
@@ -30,10 +39,10 @@ export class Mangler {
      */
     createIdentifierName(count = this.count++): string {
         let result = "";
-        let length = Mangler.chars.length;
+        let length = Mangler.letterCases.length;
 
         while (count >= 0) {
-            result = Mangler.chars[count % length] + result;
+            result = Mangler.letterCases[count % length] + result;
 
             if (count > 0) {
                 count = Math.floor(count / length) - 1;

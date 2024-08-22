@@ -1,5 +1,6 @@
 import { Compiler } from "webpack";
 import { CSSQueryManglerTranspiler, CSSVariableManglerOptions, CSSVariableManglerTranspiler, DrivenManglerTranspiler } from "../core/mangler_transpiler";
+import { Mangler } from "../core/mangler";
 
 export interface CSSMangleWebpackPluginOptions {
     /**

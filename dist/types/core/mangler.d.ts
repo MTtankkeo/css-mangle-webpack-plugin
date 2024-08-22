@@ -12,8 +12,15 @@ export interface ManglerObject {
  * with short identifier names in general.
 */
 export declare class Mangler {
-    /** This static value that is defining chars of about a base-26. */
-    static chars: string;
+    /** This static value that is defining lower-case alphabets of about a base-26. */
+    static lowerCases: string;
+    /** This static value that is defining upper-case alphabets of about a base-26. */
+    static upperCases: string;
+    /**
+     * This static value that is defining lower-case and upper-case
+     * alphabets of about a base-26.
+     */
+    static letterCases: string;
     /**
      * This value that is defining a value that increases each when
      * a unique name is generated.
