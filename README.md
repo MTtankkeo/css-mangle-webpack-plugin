@@ -65,8 +65,8 @@ body {
 }
 ```
 ```js
-const property1 = "var(--background, white)";
-const property2 = "--background";
+const property = "var(--background, white)";
+const literals = "--background";
 ```
 
 ### To
@@ -85,8 +85,8 @@ body {
 }
 ```
 ```js
-const property1 = "var(--a, white)";
-const property2 = "--a";
+const property = "var(--a, white)";
+const literals = "--a";
 ```
 
 ## Properties of CSSMangleWebpackPluginOptions
