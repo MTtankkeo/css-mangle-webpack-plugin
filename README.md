@@ -93,7 +93,7 @@ const property2 = "--a";
 | Name | Description | Type |
 | ---- | ----- | ------- |
 | ignoreScript | Whether unique identifiers in JavaScript and JSX should not be targets for transpilation. | boolean
-| processStage | Not ready a comment about this. | "OPTIMIZE" \| "OPTIMIZE_INLINE";
+| processStage | This option value defines which bundle process stage of Webpack to proceed with optimization task. | "OPTIMIZE" \| "OPTIMIZE_INLINE";
 | printLogs | Not ready a comment about this. | "ALL" \| "WARNING" \| "NONE",
 | reserved | Not ready a comment about this. | string[]
 | mangle | Not ready a comment about this. | { variableName?: boolean, className?: boolean, idName?: boolean } \| boolean
