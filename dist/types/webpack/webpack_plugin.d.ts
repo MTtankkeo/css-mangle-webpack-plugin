@@ -6,7 +6,9 @@ export interface CSSMangleWebpackPluginOptions {
      * targets for transpilation.
      */
     ignoreScript?: boolean;
+    bundleStage?: "before" | "behind";
     printLogs?: "all" | "warning" | "none";
+    reserved?: string[] | RegExp[];
     mangle?: {
         variableName?: boolean;
         className?: boolean;

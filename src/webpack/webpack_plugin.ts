@@ -1,8 +1,5 @@
 import { Compiler } from "webpack";
-import { CSSQueryManglerTranspiler, CSSVariableManglerTranspiler, DrivenManglerTranspiler, ManglerTranspiler } from "../core/mangler_transpiler";
-import { CSSQueryDeclaration } from "../core/mangler_declaration";
-import { CSSQueryReference } from "../core/mangler_reference";
-import { Mangler } from "../core/mangler";
+import { CSSQueryManglerTranspiler, CSSVariableManglerTranspiler, DrivenManglerTranspiler } from "../core/mangler_transpiler";
 
 export interface CSSMangleWebpackPluginOptions {
     /**
@@ -10,14 +7,15 @@ export interface CSSMangleWebpackPluginOptions {
      * targets for transpilation.
      */
     ignoreScript?: boolean;
+    bundleStage?: "before" | "behind";
+    printLogs?: "all" | "warning" | "none";
     // useStrict?: boolean,
-    printLogs?: "all" | "warning" | "none",
-    // reserved?: string[] | RegExp[],
+    reserved?: string[] | RegExp[],
     mangle?: {
         variableName?: boolean;
         className?: boolean;
         idName?: boolean;
-    } | boolean
+    } | boolean;
 }
 
 export class CSSMangleWebpackPlugin {
@@ -49,15 +47,24 @@ export class CSSMangleWebpackPlugin {
 
     apply(compiler: Compiler) {
         const useMangleScript = !(this.options?.ignoreScript ?? false);
+        const bundleStage = this.options?.bundleStage ?? "behind";
+        const reversed = this.options?.reserved ?? [];
 
         compiler.hooks.compilation.tap("CSSMangleWebpackPlugin", (compilation) => {
             compilation.hooks.processAssets.tap(
                 {
                     name: "CSSMangleWebpackPlugin",
-                    stage: compiler.webpack.Compilation.PROCESS_ASSETS_STAGE_OPTIMIZE_SIZE
+                    stage: bundleStage == "behind"
+                        ? compiler.webpack.Compilation.PROCESS_ASSETS_STAGE_OPTIMIZE_INLINE
+                        : compiler.webpack.Compilation.PROCESS_ASSETS_STAGE_OPTIMIZE
                 },
                 (assets) => {
                     for (const assetName in assets) {
+                        // When a given assets name and reversed assets names matched.
+                        if (reversed.find(name => name == assetName)) {
+                            return;
+                        }
+
                         if (assetName.endsWith(".html")
                          || assetName.endsWith(".js")  && useMangleScript
                          || assetName.endsWith(".jsx") && useMangleScript

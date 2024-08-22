@@ -6,3 +6,7 @@
 
 # 1.0.0-alpha5
 - Fixed to identify abnormal or non-idiomatic CSS variable declarations.
+
+# 1.0.0-alpha6
+- Added a plugin option `bundleStage` to CSSMangleWebpackPlugin.
+- Fixed for overall modularization to the webpack plugin about codes and logic.
