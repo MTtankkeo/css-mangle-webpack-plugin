@@ -76,6 +76,10 @@ export class Mangler {
         return this.cache.get(value) ? `--${this.transform(value)}` : null;
     }
 
+    CSSPropertyOf(value: string, prefix: string): string {
+        return this.cache.get(value = prefix + value) ? `${prefix}${this.transform(value)}` : null;
+    }
+
     /**
      * Prints the informations of all about this mangler.
      * i.e. this is just printing for debugging.

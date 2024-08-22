@@ -36,6 +36,7 @@ export declare class Mangler {
      * a given unique identifier has already been created and exists.
     */
     CSSVariableOf(value: string): string;
+    CSSPropertyOf(value: string, prefix: string): string;
     /**
      * Prints the informations of all about this mangler.
      * i.e. this is just printing for debugging.

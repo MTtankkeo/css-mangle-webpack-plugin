@@ -93,7 +93,51 @@ export class CSSVariableReference extends ManglerReference {
 }
 
 export class CSSQueryReference extends ManglerReference<CSSQueryManglerContext> {
-    transform(syntexText: string, context: CSSQueryManglerContext): string {
-        return syntexText;
+    transform(syntaxText: string, context: CSSQueryManglerContext): string {
+        return this.transformHTML(syntaxText, context);
+    }
+
+    transformHTML(syntaxText: string, context: CSSQueryManglerContext): string {
+        const getPropertyRegexps = (name: string) => {
+            return new RegExp(`(?<=<[\\w-]+ .*${name}\\s*=\\s*")[\\w\\s-]+(?=".*>)`, "g");
+        }
+
+        const cRegexps = syntaxText.matchAll(getPropertyRegexps("class"));
+        const iRegexps = syntaxText.matchAll(getPropertyRegexps("id"));
+
+        const createPropertyObject = (regexp: RegExpExecArray, prefix: string, mangler: Mangler) => {
+            return {name: regexp[0], index: regexp.index, prefix, mangler};
+        }
+        
+        const cProperties = Array.from(cRegexps).map(r => createPropertyObject(r, ".", context.classMangler));
+        const iProperties = Array.from(iRegexps).map(r => createPropertyObject(r, "#", context.idMangler));
+        const properties = [...cProperties, ...iProperties];
+
+        for (const property of properties) {
+            const propertyValues = property.name.matchAll(/[\w-]+/g);
+            const propertyIndex = property.index;
+
+            let replacedLength = 0;
+
+            for (const propertyValue of propertyValues) {
+                const oldName = propertyValue[0];
+                const newName = property.mangler.CSSPropertyOf(oldName, property.prefix);
+                const length = oldName.length;
+                const index = propertyIndex + propertyValue.index + replacedLength;
+                if (newName) {
+                    const result = StringUtil.replaceRange(
+                        syntaxText,
+                        index,
+                        index + length,
+                        newName.replace(property.prefix, "")
+                    );
+
+                    replacedLength += StringUtil.replacedLength(syntaxText, result);
+                    syntaxText = result;
+                }
+            }
+        }
+
+        return syntaxText;
     }
 }
