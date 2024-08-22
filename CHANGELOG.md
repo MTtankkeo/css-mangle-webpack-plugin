@@ -9,4 +9,5 @@
 
 # 1.0.0-alpha6
 - Added a plugin option `bundleStage` to CSSMangleWebpackPlugin.
+- Added a plugin option `CSSVariableManglerOptions` of `variableName` of `mangle` to CSSMangleWebpackPlugin.
 - Fixed for overall modularization to the webpack plugin about codes and logic.
