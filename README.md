@@ -42,7 +42,7 @@ const CSSManglePlugin = require("css-mangle-webpack-plugin").default;
 
 module.exports = {
   // Add an instance of CSSManglePlugin to plugins property value.
-  plugins: [new CSSManglePlugin()]
+  plugins: [new CSSManglePlugin({...})]
 }
 ```
 
@@ -55,12 +55,18 @@ The example below demonstrates the simplest of many possible transformations. In
   --background: white;
   --foreground: black;
 }
+
+/* Supoort Custom Property Registration. */
 @property --reaground { ... }
 
 body {
   background-color: var(--background);
   color: var(--foreground)
 }
+```
+```js
+const property1 = "var(--background, white)";
+const property2 = "--background";
 ```
 
 ### To
@@ -69,6 +75,8 @@ body {
   --a: white;
   --b: black;
 }
+
+/* Supoort Custom Property Registration. */
 @property --c { ... }
 
 body {
@@ -76,10 +84,16 @@ body {
   color: var(--b)
 }
 ```
+```js
+const property1 = "var(--a, white)";
+const property2 = "--a";
+```
 
 ## Properties of CSSMangleWebpackPluginOptions
-| Name | Descript | Type |
+| Name | Description | Type |
 | ---- | ----- | ------- |
 | ignoreScript | Whether unique identifiers in JavaScript and JSX should not be targets for transpilation. | boolean
-| printLogs | Not ready a comment about this. | "all" \| "warning" \| "none",
-| mangle | Not ready a comment about this. | {variable?: boolean}
+| processStage | Not ready a comment about this. | "OPTIMIZE" \| "OPTIMIZE_INLINE";
+| printLogs | Not ready a comment about this. | "ALL" \| "WARNING" \| "NONE",
+| reserved | Not ready a comment about this. | string[]
+| mangle | Not ready a comment about this. | { variableName?: boolean, className?: boolean, idName?: boolean } \| boolean

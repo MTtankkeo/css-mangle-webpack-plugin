@@ -7,10 +7,13 @@ export interface CSSMangleWebpackPluginOptions {
      * targets for transpilation.
      */
     ignoreScript?: boolean;
-    bundleStage?: "before" | "behind";
-    printLogs?: "all" | "warning" | "none";
-    // useStrict?: boolean,
-    reserved?: string[] | RegExp[],
+    /**
+     * This option value defines which bundle process stage of Webpack
+     * to proceed with optimization task.
+     */
+    processStage?: "OPTIMIZE" | "OPTIMIZE_INLINE";
+    printLogs?: "ALL" | "WARNING" | "NONE";
+    reserved?: string[],
     mangle?: {
         variableName?: boolean;
         className?: boolean;
@@ -47,14 +50,14 @@ export class CSSMangleWebpackPlugin {
 
     apply(compiler: Compiler) {
         const useMangleScript = !(this.options?.ignoreScript ?? false);
-        const bundleStage = this.options?.bundleStage ?? "behind";
+        const processStage = this.options?.processStage ?? "behind";
         const reversed = this.options?.reserved ?? [];
 
         compiler.hooks.compilation.tap("CSSMangleWebpackPlugin", (compilation) => {
             compilation.hooks.processAssets.tap(
                 {
                     name: "CSSMangleWebpackPlugin",
-                    stage: bundleStage == "behind"
+                    stage: processStage == "OPTIMIZE_INLINE"
                         ? compiler.webpack.Compilation.PROCESS_ASSETS_STAGE_OPTIMIZE_INLINE
                         : compiler.webpack.Compilation.PROCESS_ASSETS_STAGE_OPTIMIZE
                 },
@@ -80,11 +83,11 @@ export class CSSMangleWebpackPlugin {
                         }
                     }
 
-                    if (this.options?.printLogs == "all" ?? false) {
+                    if (this.options?.printLogs == "ALL" ?? false) {
                         this.transpilers.forEach(e => e.manglers.forEach(m => m.printLogs()));
                     }
 
-                    if (this.options?.printLogs == "warning" ?? false) {
+                    if (this.options?.printLogs == "WARNING" ?? false) {
                         this.transpilers.forEach(e => e.manglers.forEach(m => m.printLogsUnused()));
                     }
                 }
