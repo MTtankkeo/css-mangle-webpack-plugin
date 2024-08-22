@@ -1,9 +1,9 @@
 import { StringUtil } from "../utils/string";
 import { Mangler } from "./mangler";
-import { CSSVariableManglerOptions } from "./mangler_transpiler";
+import { CSSQueryManglerContext, CSSVariableManglerOptions } from "./mangler_transpiler";
 
-export abstract class ManglerReference {
-    abstract transform(syntaxText: string, mangler: Mangler): string;
+export abstract class ManglerReference<T = Mangler> {
+    abstract transform(syntaxText: string, context: T): string;
 }
 
 export class CSSVariableReference extends ManglerReference {
@@ -47,7 +47,7 @@ export class CSSVariableReference extends ManglerReference {
                     identifier
                 );
 
-                replacedLength -= StringUtil.replacedLength(syntaxText, result);
+                replacedLength += StringUtil.replacedLength(syntaxText, result);
                 syntaxText = result;
             }
         }
@@ -82,7 +82,7 @@ export class CSSVariableReference extends ManglerReference {
                         identifier
                     );
 
-                    replacedLength -= StringUtil.replacedLength(syntaxText, result);
+                    replacedLength += StringUtil.replacedLength(syntaxText, result);
                     syntaxText = result;
                 }
             }
@@ -92,8 +92,8 @@ export class CSSVariableReference extends ManglerReference {
     }
 }
 
-export class CSSQueryReference extends ManglerReference {
-    transform(syntexText: string, mangler: Mangler): string {
+export class CSSQueryReference extends ManglerReference<CSSQueryManglerContext> {
+    transform(syntexText: string, context: CSSQueryManglerContext): string {
         return syntexText;
     }
 }

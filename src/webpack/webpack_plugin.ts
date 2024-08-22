@@ -22,7 +22,7 @@ export interface CSSMangleWebpackPluginOptions {
 }
 
 export class CSSMangleWebpackPlugin {
-    transpilers: DrivenManglerTranspiler[] = [];
+    transpilers: DrivenManglerTranspiler<any>[] = [];
 
     constructor(public options: CSSMangleWebpackPluginOptions) {
         // When is not active to compress about the identifiers of CSS.

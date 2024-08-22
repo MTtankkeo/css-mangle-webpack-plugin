@@ -20,6 +20,6 @@ export class StringUtil {
      * and a given new string.
      */
     static replacedLength(oldStr: string, newStr: string) {
-        return oldStr.length - newStr.length;
+        return newStr.length - oldStr.length;
     }
 }

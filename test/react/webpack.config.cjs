@@ -7,7 +7,7 @@ const config = {
     mode: "production",
     entry: "./src/index.js",
     plugins: [
-        new CSSMangleWebpackPlugin(),
+        new CSSMangleWebpackPlugin({mangle: {className: true}}),
         new MiniCssExtractPlugin(),
         new HTMLWebpackPlugin({
             template: "./src/index.html",

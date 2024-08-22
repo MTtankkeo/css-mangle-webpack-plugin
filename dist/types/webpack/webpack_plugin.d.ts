@@ -21,7 +21,7 @@ export interface CSSMangleWebpackPluginOptions {
 }
 export declare class CSSMangleWebpackPlugin {
     options: CSSMangleWebpackPluginOptions;
-    transpilers: DrivenManglerTranspiler[];
+    transpilers: DrivenManglerTranspiler<any>[];
     constructor(options: CSSMangleWebpackPluginOptions);
     apply(compiler: Compiler): void;
 }

@@ -1,7 +1,7 @@
 import { Mangler } from "./mangler";
-import { CSSVariableManglerOptions } from "./mangler_transpiler";
-export declare abstract class ManglerReference {
-    abstract transform(syntaxText: string, mangler: Mangler): string;
+import { CSSQueryManglerContext, CSSVariableManglerOptions } from "./mangler_transpiler";
+export declare abstract class ManglerReference<T = Mangler> {
+    abstract transform(syntaxText: string, context: T): string;
 }
 export declare class CSSVariableReference extends ManglerReference {
     options: CSSVariableManglerOptions;
@@ -10,6 +10,6 @@ export declare class CSSVariableReference extends ManglerReference {
     transformLiteral(syntaxText: string, mangler: Mangler): string;
     transformProperty(syntaxText: string, mangler: Mangler): string;
 }
-export declare class CSSQueryReference extends ManglerReference {
-    transform(syntexText: string, mangler: Mangler): string;
+export declare class CSSQueryReference extends ManglerReference<CSSQueryManglerContext> {
+    transform(syntexText: string, context: CSSQueryManglerContext): string;
 }

@@ -1,8 +1,9 @@
 import { StringUtil } from "../utils/string";
 import { Mangler } from "./mangler";
+import { CSSQueryManglerContext } from "./mangler_transpiler";
 
-export abstract class ManglerDeclaration {
-    abstract transform(syntaxText: string, mangler: Mangler): string;
+export abstract class ManglerDeclaration<T = Mangler> {
+    abstract transform(syntaxText: string, context: T): string;
 }
 
 export class CSSVariableDeclaration extends ManglerDeclaration {
@@ -41,7 +42,7 @@ export class CSSVariableDeclaration extends ManglerDeclaration {
                 `--${identifier}`
             );
 
-            replacedLength -= StringUtil.replacedLength(syntaxText, result);
+            replacedLength += StringUtil.replacedLength(syntaxText, result);
             syntaxText = result;
         }
 
@@ -49,16 +50,17 @@ export class CSSVariableDeclaration extends ManglerDeclaration {
     }
 }
 
-export class CSSQueryDeclaration extends ManglerDeclaration {
-    transform(syntaxText: string, mangler: Mangler): string {
+export class CSSQueryDeclaration extends ManglerDeclaration<CSSQueryManglerContext> {
+    transform(syntaxText: string, context: CSSQueryManglerContext): string {
         // this syntex is a pseudo-class of CSS.
         const pesudoClass = /((:|::)\w+(\([\w='"]+\))?)?/.source;
 
         // This syntax matches className IdName that is a selector identifier that is like .a and #b
-        const selectorCIPart = /(\.|.#)[a-zA-Z0-9_-]+/.source;
+        const selectorCIPart = /(\.|#)[a-zA-Z0-9_-]+/.source;
         const selectorCI = `${selectorCIPart}${pesudoClass}`;
 
-        const selectorIdPart = /(\.|.#)?[a-zA-Z0-0_-]+/.source;
+        // This syntax matches tag-names that is a selector identifier that is like div and .a and #b
+        const selectorIdPart = /(\.|#)?[a-zA-Z0-0_-]+/.source;
         const selectorId = `${selectorIdPart}${pesudoClass}`;
 
         const contextBehind = `\\s+(\\w*(${selectorId})?)\\s*`;
@@ -73,20 +75,28 @@ export class CSSQueryDeclaration extends ManglerDeclaration {
         const regexpText = `${selectorCI}(?=(${contextBehind})*\\{)`;
         const regexpList = syntaxText.matchAll(new RegExp(regexpText, "g"));
 
-        console.log(regexpText);
+        let replacedLength = 0;
 
         for (const global of regexpList) {
-            console.log(global[0])
+            const oldName = global[0];
+            const isClass = /^\./.test(oldName);
+            const mangler = isClass ? context.classMangler : context.idMangler;
+            const newName = mangler.transform(oldName);
+            const length = oldName.length;
+            const prefix = isClass ? "." : "#";
+            const index = global.index + replacedLength;
+
+            const result = StringUtil.replaceRange(
+                syntaxText,
+                index,
+                index + length,
+                prefix + newName
+            );
+
+            replacedLength += StringUtil.replacedLength(syntaxText, result);
+            syntaxText = result;
         }
 
         return syntaxText;
-    }
-
-    transformId() {
-
-    }
-
-    transformClass() {
-
     }
 }
