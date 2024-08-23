@@ -77,7 +77,7 @@ export class CSSQueryDeclaration extends ManglerDeclaration<CSSQueryManglerConte
         const selectorIdPart = /(\.|#)?[a-zA-Z0-0_-]+|\*/.source;
         const selectorId = `${selectorIdPart}${pesudoClass}`;
 
-        const contextBehind = `((\\w*|\\*)(${selectorId})?)`;
+        const contextBehind = `(([\\w-]*|\\*)(${selectorId})?)`;
 
         // This patterns matched by the following are:
         //
