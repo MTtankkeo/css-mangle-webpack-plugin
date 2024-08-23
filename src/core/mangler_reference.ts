@@ -143,6 +143,7 @@ export class CSSQueryReference extends ManglerReference<CSSQueryManglerContext> 
         return syntaxText;
     }
 
+    /** TODO: It should be considered about dereference for variables. */
     transformObject(syntaxText: string, context: CSSQueryManglerContext): string { // for JSX
         const getPropertyRegexps = (name: string) => {
             return new RegExp(`(?<=\\{.*${name}:\\s*['"])[\\w\\s-]+(?=['"].*\\})`, "g");
@@ -150,6 +151,10 @@ export class CSSQueryReference extends ManglerReference<CSSQueryManglerContext> 
 
         const cProperties = syntaxText.matchAll(getPropertyRegexps("className"));
         const iProperties = syntaxText.matchAll(getPropertyRegexps("id"));
+
+        for (const property of cProperties) {
+            console.log(property[0]);
+        }
 
         return syntaxText;
     }

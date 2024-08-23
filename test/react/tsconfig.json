@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "strict": true,
+        "module": "ES2022",
+        "target": "ES2015",
+        "jsx": "react-jsx",
+        "moduleResolution": "Node",
+        "sourceMap": true
+    }
+}

@@ -53,7 +53,10 @@ export class CSSVariableDeclaration extends ManglerDeclaration {
 export class CSSQueryDeclaration extends ManglerDeclaration<CSSQueryManglerContext> {
     transform(syntaxText: string, context: CSSQueryManglerContext): string {
         // this syntex is a pseudo-class of CSS.
-        const pesudoClass = /((:|::)\w+(\([\w='"]+\))?)?/.source;
+        // 
+        // See Also, A pattern such as .name:function(e) may defined from js.
+        // (e.g. .clz32:function(e) in React).
+        const pesudoClass = /((:|::)(?!function\b)\w+(\([\w='"]+\))?)?/.source;
 
         // This syntax matches className IdName that is a selector identifier that is like .a and #b
         const selectorCIPart = /(\.|#)[a-zA-Z0-9_-]+/.source;
@@ -85,6 +88,7 @@ export class CSSQueryDeclaration extends ManglerDeclaration<CSSQueryManglerConte
             const length = oldName.length;
             const prefix = isClass ? "." : "#";
             const index = global.index + replacedLength;
+            console.log(oldName);
 
             const result = StringUtil.replaceRange(
                 syntaxText,
