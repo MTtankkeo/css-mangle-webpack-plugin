@@ -36,17 +36,17 @@ export class CSSVariableReference extends ManglerReference {
         let replacedLength = 0;
 
         for (const regexp of regexps) {
-            const name = regexp[0];
             const index = regexp.index + replacedLength;
             const mangler = context.parent;
-            const identifier = mangler.CSSVariableOf(name);
+            const oldName = regexp[0];
+            const newName = mangler.CSSVariableOf(oldName, context.options.canUndeclared);
 
-            if (identifier) {
+            if (newName) {
                 const result = StringUtil.replaceRange(
                     syntaxText,
                     index,
-                    index + name.length,
-                    identifier
+                    index + oldName.length,
+                    newName
                 );
 
                 replacedLength += StringUtil.replacedLength(syntaxText, result);
@@ -72,17 +72,17 @@ export class CSSVariableReference extends ManglerReference {
             const globalIndex = global.index;
 
             for (const local of locals) {
-                const name = local[0];
                 const index = (globalIndex + local.index) + replacedLength;
                 const mangler = context.parent;
-                const identifier = mangler.CSSVariableOf(name);
+                const oldName = local[0];
+                const newName = mangler.CSSVariableOf(oldName, context.options.canUndeclared);
 
-                if (identifier) {
+                if (newName) {
                     const result = StringUtil.replaceRange(
                         syntaxText,
                         index,
-                        index + name.length,
-                        identifier
+                        index + oldName.length,
+                        newName
                     );
 
                     replacedLength += StringUtil.replacedLength(syntaxText, result);

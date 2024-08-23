@@ -42,7 +42,7 @@ export declare class Mangler {
      * Returns a short unique identifier if a short unique identifier for
      * a given unique identifier has already been created and exists.
     */
-    CSSVariableOf(value: string): string;
+    CSSVariableOf(value: string, canMangle?: boolean): string;
     CSSPropertyOf(value: string, prefix: string): string;
     /**
      * Prints the informations of all about this mangler.

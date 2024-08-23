@@ -1,5 +1,5 @@
 import { Mangler } from "./mangler";
-import { ManglerContext } from "./mangler_context";
+import { ManglerContext, ManglerContextOptions } from "./mangler_context";
 import { CSSQueryDeclaration, ManglerDeclaration } from "./mangler_declaration";
 import { CSSQueryReference, ManglerReference } from "./mangler_reference";
 export declare abstract class ManglerTranspiler<T = Mangler> {
@@ -14,7 +14,7 @@ export declare abstract class DrivenManglerTranspiler<T = Mangler> extends Mangl
     context: ManglerContext<T>;
     createMangler(): Mangler;
 }
-export interface CSSVariableManglerOptions {
+export interface CSSVariableManglerOptions extends ManglerContextOptions {
     property: boolean;
     literals: boolean;
 }

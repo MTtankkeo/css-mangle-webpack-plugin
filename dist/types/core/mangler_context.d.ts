@@ -1,10 +1,10 @@
 import { CSSMangleReserved } from "../types";
+export interface ManglerContextOptions {
+    reversed: CSSMangleReserved;
+    canUndeclared: boolean;
+}
 export declare class ManglerContext<T> {
-    options: {
-        reversed: CSSMangleReserved;
-    };
+    options: ManglerContextOptions;
     parent: T;
-    constructor(options: {
-        reversed: CSSMangleReserved;
-    }, parent: T);
+    constructor(options: ManglerContextOptions, parent: T);
 }

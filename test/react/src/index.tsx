@@ -10,4 +10,4 @@ function Root() {
     )
 }
 
-createRoot(document.body).render(<Root />);
+// createRoot(document.body).render(<Root />);

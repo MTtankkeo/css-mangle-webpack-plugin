@@ -1,5 +1,5 @@
 import { Mangler } from "./mangler";
-import { ManglerContext } from "./mangler_context";
+import { ManglerContext, ManglerContextOptions } from "./mangler_context";
 import { CSSQueryDeclaration, CSSVariableDeclaration, ManglerDeclaration } from "./mangler_declaration";
 import { CSSQueryReference, CSSVariableReference, ManglerReference } from "./mangler_reference";
 
@@ -20,7 +20,7 @@ export abstract class DrivenManglerTranspiler<T = Mangler> extends ManglerTransp
     }
 }
 
-export interface CSSVariableManglerOptions {
+export interface CSSVariableManglerOptions extends ManglerContextOptions {
     property: boolean;
     literals: boolean;
 }
@@ -39,7 +39,7 @@ export class CSSVariableManglerTranspiler extends DrivenManglerTranspiler {
     }
 
     createContext(): ManglerContext<Mangler> {
-        return new ManglerContext({reversed: []}, this.createMangler());
+        return new ManglerContext(this.options, this.createMangler());
     }
 
     transform(syntaxText: string): string {
@@ -65,7 +65,7 @@ export class CSSQueryManglerTranspiler extends DrivenManglerTranspiler<CSSQueryM
     }
 
     createContext(): ManglerContext<CSSQueryManglerContext> {
-        return new ManglerContext({reversed: []}, {
+        return new ManglerContext({reversed: [], canUndeclared: false}, {
             classMangler: this.createMangler(),
             idMangler: this.createMangler()
         });

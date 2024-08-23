@@ -105,6 +105,7 @@ export class CSSQueryDeclaration extends ManglerDeclaration<CSSQueryManglerConte
             const length = oldName.length;
             const prefix = isClass ? "." : "#";
             const index = global.index + replacedLength;
+            
             console.log(oldName);
 
             const result = StringUtil.replaceRange(

@@ -5,7 +5,7 @@
         <thead>
           <tr>
             <th>Version</th>
-            <th>v1.0.0-alpha6</th>
+            <th>v1.0.0-alpha7</th>
           </tr>
         </tbody>
     </table>
@@ -97,4 +97,4 @@ const literals = "--a";
 | processStage | This option value defines which bundle process stage of Webpack to proceed with optimization task. | "OPTIMIZE" \| "OPTIMIZE_INLINE";
 | printLogs | Not ready a comment about this. | "ALL" \| "WARNING" \| "NONE",
 | reserved | Not ready a comment about this. | string[]
-| mangle | Not ready a comment about this. | { variableName?: boolean \| CSSVariableManglerOptions, className?: boolean, idName?: boolean } \| boolean
+| mangle | Not ready a comment about this. | { variableName?: boolean \| CSSVariableManglerOptions, className?: boolean, idName?: boolean, options: ... } \| boolean

@@ -19,8 +19,14 @@ export interface CSSMangleWebpackPluginOptions {
         variableName?: boolean | CSSVariableManglerOptions;
         className?: boolean;
         idName?: boolean;
-        // reserved?: CSSMangleReserved
-    };
+        options?: {
+            /**
+             * Whether an undeclared identifier in this webpack plugin would
+             * still be considered for minification.
+             */
+            undeclared: boolean;
+        }
+    }
 }
 
 export class CSSMangleWebpackPlugin {
@@ -28,7 +34,7 @@ export class CSSMangleWebpackPlugin {
 
     constructor(public options: CSSMangleWebpackPluginOptions) {
         // When is not active to compress about the identifiers of CSS.
-        if (!(options?.mangle ?? true)) return;
+        if (!(options?.mangle ?? true)) return
 
         /** @ts-ignore */
         const variableName: boolean = options?.mangle?.variableName ?? true;
@@ -39,11 +45,16 @@ export class CSSMangleWebpackPlugin {
         /** @ts-ignore */
         const idName: boolean = options?.mangle?.idName ?? false;
 
+        /** @ts-ignore */
+        const canUndeclared: boolean = options?.mangle?.options?.undeclared ?? false;
+
         // When a developer want to compress a variable names of CSS.
         if (variableName === true
          || variableName["property"] != null
          || variableName["literals"] != null) {
             this.transpilers.push(new CSSVariableManglerTranspiler({
+                reversed: [],
+                canUndeclared: canUndeclared,
                 property: variableName["property"] ?? true,
                 literals: variableName["literals"] ?? true
             }));

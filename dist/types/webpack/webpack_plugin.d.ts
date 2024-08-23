@@ -18,6 +18,13 @@ export interface CSSMangleWebpackPluginOptions {
         variableName?: boolean | CSSVariableManglerOptions;
         className?: boolean;
         idName?: boolean;
+        options?: {
+            /**
+             * Whether an undeclared identifier in this webpack plugin would
+             * still be considered for minification.
+             */
+            undeclared: boolean;
+        };
     };
 }
 export declare class CSSMangleWebpackPlugin {

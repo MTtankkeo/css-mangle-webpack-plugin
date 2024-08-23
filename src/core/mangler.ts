@@ -81,8 +81,8 @@ export class Mangler {
      * Returns a short unique identifier if a short unique identifier for
      * a given unique identifier has already been created and exists.
     */
-    CSSVariableOf(value: string): string {
-        return this.cache.get(value) ? `--${this.transform(value)}` : null;
+    CSSVariableOf(value: string, canMangle = false): string {
+        return this.cache.get(value) || canMangle ? `--${this.transform(value)}` : null;
     }
 
     CSSPropertyOf(value: string, prefix: string): string {
