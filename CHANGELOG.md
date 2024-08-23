@@ -13,4 +13,4 @@
 - Fixed for overall modularization to the webpack plugin about codes and logic.
 
 # 1.0.0-alpha7
-- Fixed to translate variables using even upper-case alphabets.
+- Fixed to transform variables using even upper-case alphabets.
