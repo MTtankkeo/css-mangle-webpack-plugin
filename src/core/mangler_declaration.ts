@@ -53,10 +53,21 @@ export class CSSVariableDeclaration extends ManglerDeclaration {
 export class CSSQueryDeclaration extends ManglerDeclaration<CSSQueryManglerContext> {
     transform(syntaxText: string, context: CSSQueryManglerContext): string {
         // this syntex is a pseudo-class of CSS.
-        // 
+        //
+        // If you want details about it,
+        // You can refer to https://developer.mozilla.org/docs/Web/CSS/Attribute_selectors
+        //
+        // Support attribute operators:
+        // - =
+        // - ~=
+        // - |=
+        // - ^=
+        // - $=
+        // - *=
+        //
         // See Also, A pattern such as .name:function(e) may defined from js.
-        // (e.g. .clz32:function(e) in React).
-        const pesudoClass = /((:|::)(?!function\b)[\w-]+([\(\[][\w-]+(=((".*")|('.*')|\d*))?[\)\]])?)?/.source;
+        // (e.g. .clz32:function(e) in React)
+        const pesudoClass = /((:|::)(?!function\b)[\w-]+([\(\[][\w-]+([~|^$*]?=((".*")|('.*')|\d+)(\s[is])?)?[\)\]])?)?/.source;
 
         // This syntax matches className IdName that is a selector identifier that is like .a and #b
         const selectorCIPart = /(\.|#)[a-zA-Z0-9_-]+/.source;
@@ -66,7 +77,7 @@ export class CSSQueryDeclaration extends ManglerDeclaration<CSSQueryManglerConte
         const selectorIdPart = /(\.|#)?[a-zA-Z0-0_-]+/.source;
         const selectorId = `${selectorIdPart}${pesudoClass}`;
 
-        const contextBehind = `\\s+(\\w*(${selectorId})?)\\s*`;
+        const contextBehind = `(\\w*(${selectorId})?)\\s*`;
 
         // This patterns matched by the following are:
         //
@@ -75,7 +86,7 @@ export class CSSQueryDeclaration extends ManglerDeclaration<CSSQueryManglerConte
         // .a #b {}
         // .a:hover {}
         // .a:hover #b {}
-        const regexpText = `${selectorCI}(?=(${contextBehind})*\\{)`;
+        const regexpText = `${selectorCI}(?=(\\s+${contextBehind})*\\{)`;
         const regexpList = syntaxText.matchAll(new RegExp(regexpText, "g"));
 
         console.log(regexpText)
