@@ -74,10 +74,8 @@ export class CSSQueryDeclaration extends ManglerDeclaration<CSSQueryManglerConte
         const selectorCI = `${selectorCIPart}${pesudoClass}`;
 
         // This syntax matches tag-names that is a selector identifier that is like div, *, .a, #b
-        const selectorIdPart = /(\.|#)?[a-zA-Z0-0_-]+|\*/.source;
+        const selectorIdPart = /([\w-]*(\.|#)?[a-zA-Z0-9_-]+|\*)/.source;
         const selectorId = `${selectorIdPart}${pesudoClass}`;
-
-        const contextBehind = `(([\\w-]*|\\*)(${selectorId})?)`;
 
         // This patterns matched by the following are:
         //
@@ -86,7 +84,7 @@ export class CSSQueryDeclaration extends ManglerDeclaration<CSSQueryManglerConte
         // .a #b {}
         // .a:hover {}
         // .a:hover #b {}
-        const regexpText = `${selectorCI}(?=(\\s+${contextBehind})*\\s*\\{)`;
+        const regexpText = `${selectorCI}(?=\\s*{|(\\s${selectorId})+\\s*{)`;
         const regexpList = syntaxText.matchAll(new RegExp(regexpText, "g"));
 
         console.log(regexpText)
