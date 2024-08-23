@@ -1,6 +1,6 @@
 import { Compiler } from "webpack";
 import { CSSQueryManglerTranspiler, CSSVariableManglerOptions, CSSVariableManglerTranspiler, DrivenManglerTranspiler } from "../core/mangler_transpiler";
-import { Mangler } from "../core/mangler";
+import { CSSMangleReserved } from "../types";
 
 export interface CSSMangleWebpackPluginOptions {
     /**
@@ -14,11 +14,12 @@ export interface CSSMangleWebpackPluginOptions {
      */
     processStage?: "OPTIMIZE" | "OPTIMIZE_INLINE";
     printLogs?: "ALL" | "WARNING" | "NONE";
-    reserved?: string[],
+    reserved?: CSSMangleReserved,
     mangle?: boolean | {
         variableName?: boolean | CSSVariableManglerOptions;
         className?: boolean;
         idName?: boolean;
+        // reserved?: CSSMangleReserved
     };
 }
 
@@ -90,11 +91,11 @@ export class CSSMangleWebpackPlugin {
                     }
 
                     if (this.options?.printLogs == "ALL" ?? false) {
-                        this.transpilers.forEach(e => e.manglers.forEach(m => m.printLogs()));
+                        this.transpilers.forEach(e => e.context.parent.forEach(m => m.printLogs()));
                     }
 
                     if (this.options?.printLogs == "WARNING" ?? false) {
-                        this.transpilers.forEach(e => e.manglers.forEach(m => m.printLogsUnused()));
+                        this.transpilers.forEach(e => e.context.parent.forEach(m => m.printLogsUnused()));
                     }
                 }
             );

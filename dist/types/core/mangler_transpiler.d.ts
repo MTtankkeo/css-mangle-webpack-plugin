@@ -1,15 +1,17 @@
 import { Mangler } from "./mangler";
+import { ManglerContext } from "./mangler_context";
 import { CSSQueryDeclaration, ManglerDeclaration } from "./mangler_declaration";
 import { CSSQueryReference, ManglerReference } from "./mangler_reference";
 export declare abstract class ManglerTranspiler<T = Mangler> {
     abstract createManglerDeclaration(): ManglerDeclaration<T>;
     abstract createManglerReference(): ManglerReference<T>;
     abstract createMangler(): Mangler;
+    abstract createContext(): ManglerContext<T>;
     abstract transform(syntaxText: string): string;
 }
 /** This class provides functions in general use for the foundation of this package. */
 export declare abstract class DrivenManglerTranspiler<T = Mangler> extends ManglerTranspiler<T> {
-    manglers: Mangler[];
+    context: ManglerContext<T>;
     createMangler(): Mangler;
 }
 export interface CSSVariableManglerOptions {
@@ -21,6 +23,7 @@ export declare class CSSVariableManglerTranspiler extends DrivenManglerTranspile
     constructor(options: CSSVariableManglerOptions);
     createManglerDeclaration(): ManglerDeclaration;
     createManglerReference(): ManglerReference;
+    createContext(): ManglerContext<Mangler>;
     transform(syntaxText: string): string;
 }
 export interface CSSQueryManglerContext {
@@ -30,5 +33,6 @@ export interface CSSQueryManglerContext {
 export declare class CSSQueryManglerTranspiler extends DrivenManglerTranspiler<CSSQueryManglerContext> {
     createManglerDeclaration(): CSSQueryDeclaration;
     createManglerReference(): CSSQueryReference;
+    createContext(): ManglerContext<CSSQueryManglerContext>;
     transform(syntaxText: string): string;
 }

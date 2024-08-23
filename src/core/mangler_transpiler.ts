@@ -1,4 +1,5 @@
 import { Mangler } from "./mangler";
+import { ManglerContext } from "./mangler_context";
 import { CSSQueryDeclaration, CSSVariableDeclaration, ManglerDeclaration } from "./mangler_declaration";
 import { CSSQueryReference, CSSVariableReference, ManglerReference } from "./mangler_reference";
 
@@ -6,16 +7,16 @@ export abstract class ManglerTranspiler<T = Mangler> {
     abstract createManglerDeclaration(): ManglerDeclaration<T>;
     abstract createManglerReference(): ManglerReference<T>;
     abstract createMangler(): Mangler;
+    abstract createContext(): ManglerContext<T>;
     abstract transform(syntaxText: string): string;
 }
 
 /** This class provides functions in general use for the foundation of this package. */
 export abstract class DrivenManglerTranspiler<T = Mangler> extends ManglerTranspiler<T> {
-    manglers: Mangler[] = [];
+    context: ManglerContext<T>;
 
     createMangler(): Mangler {
-        const instance = new Mangler();
-        return this.manglers.push(instance), instance;
+        return new Mangler();
     }
 }
 
@@ -37,10 +38,14 @@ export class CSSVariableManglerTranspiler extends DrivenManglerTranspiler {
         return new CSSVariableReference(this.options);
     }
 
+    createContext(): ManglerContext<Mangler> {
+        return new ManglerContext({reversed: []}, this.createMangler());
+    }
+
     transform(syntaxText: string): string {
-        const mangler = this.manglers[0] ?? this.createMangler();
-        const t1 = this.createManglerDeclaration().transform(syntaxText, mangler);
-        const t2 = this.createManglerReference().transform(t1, mangler);
+        const context = this.context ?? this.createContext();
+        const t1 = this.createManglerDeclaration().transform(syntaxText, context);
+        const t2 = this.createManglerReference().transform(t1, context);
         return t2;
     }
 }
@@ -59,14 +64,15 @@ export class CSSQueryManglerTranspiler extends DrivenManglerTranspiler<CSSQueryM
         return new CSSQueryReference();
     }
 
-    transform(syntaxText: string): string {
-        const cMangler = this.manglers[0] ?? this.createMangler();
-        const iMangler = this.manglers[1] ?? this.createMangler();
-        const context: CSSQueryManglerContext = {
-            classMangler: cMangler,
-            idMangler: iMangler
-        }
+    createContext(): ManglerContext<CSSQueryManglerContext> {
+        return new ManglerContext({reversed: []}, {
+            classMangler: this.createMangler(),
+            idMangler: this.createMangler()
+        });
+    }
 
+    transform(syntaxText: string): string {
+        const context = this.context ?? this.createContext();
         const t1 = this.createManglerDeclaration().transform(syntaxText, context);
         const t2 = this.createManglerReference().transform(t1, context);
         return t2;

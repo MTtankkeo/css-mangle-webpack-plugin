@@ -1,9 +1,10 @@
 import { StringUtil } from "../utils/string";
 import { Mangler } from "./mangler";
+import { ManglerContext } from "./mangler_context";
 import { CSSQueryManglerContext } from "./mangler_transpiler";
 
 export abstract class ManglerDeclaration<T = Mangler> {
-    abstract transform(syntaxText: string, context: T): string;
+    abstract transform(syntaxText: string, context: ManglerContext<T>): string;
 }
 
 export class CSSVariableDeclaration extends ManglerDeclaration {
@@ -11,7 +12,7 @@ export class CSSVariableDeclaration extends ManglerDeclaration {
      * Parse a given syntex strings and based on declare identifier
      * name to [Mangler].
      */
-    transform(syntaxText: string, mangler: Mangler): string {
+    transform(syntaxText: string, context: ManglerContext<Mangler>): string {
         // In CSS variable declarations, a unique syntax is generally used,
         // making identification relatively straightforward.
         //
@@ -34,6 +35,7 @@ export class CSSVariableDeclaration extends ManglerDeclaration {
         for (const global of result) {
             const name = global[0];
             const index = global.index + replacedLength;
+            const mangler = context.parent;
             const identifier = mangler.transform(name);
             const result = StringUtil.replaceRange(
                 syntaxText,
@@ -51,7 +53,10 @@ export class CSSVariableDeclaration extends ManglerDeclaration {
 }
 
 export class CSSQueryDeclaration extends ManglerDeclaration<CSSQueryManglerContext> {
-    transform(syntaxText: string, context: CSSQueryManglerContext): string {
+    transform(
+        syntaxText: string,
+        context: ManglerContext<CSSQueryManglerContext>
+    ): string {
         // this syntex is a pseudo-class of CSS.
         //
         // If you want details about it,
@@ -94,7 +99,8 @@ export class CSSQueryDeclaration extends ManglerDeclaration<CSSQueryManglerConte
         for (const global of regexpList) {
             const oldName = global[0];
             const isClass = /^\./.test(oldName);
-            const mangler = isClass ? context.classMangler : context.idMangler;
+            const manglers = context.parent;
+            const mangler = isClass ? manglers.classMangler : manglers.idMangler;
             const newName = mangler.transform(oldName);
             const length = oldName.length;
             const prefix = isClass ? "." : "#";

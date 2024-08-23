@@ -1,5 +1,6 @@
 import { Compiler } from "webpack";
 import { CSSVariableManglerOptions, DrivenManglerTranspiler } from "../core/mangler_transpiler";
+import { CSSMangleReserved } from "../types";
 export interface CSSMangleWebpackPluginOptions {
     /**
      * Whether unique identifiers in JavaScript and JSX should not be
@@ -12,7 +13,7 @@ export interface CSSMangleWebpackPluginOptions {
      */
     processStage?: "OPTIMIZE" | "OPTIMIZE_INLINE";
     printLogs?: "ALL" | "WARNING" | "NONE";
-    reserved?: string[];
+    reserved?: CSSMangleReserved;
     mangle?: boolean | {
         variableName?: boolean | CSSVariableManglerOptions;
         className?: boolean;

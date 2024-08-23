@@ -1,9 +1,10 @@
 import { StringUtil } from "../utils/string";
 import { Mangler } from "./mangler";
+import { ManglerContext } from "./mangler_context";
 import { CSSQueryManglerContext, CSSVariableManglerOptions } from "./mangler_transpiler";
 
 export abstract class ManglerReference<T = Mangler> {
-    abstract transform(syntaxText: string, context: T): string;
+    abstract transform(syntaxText: string, context: ManglerContext<T>): string;
 }
 
 export class CSSVariableReference extends ManglerReference {
@@ -11,13 +12,13 @@ export class CSSVariableReference extends ManglerReference {
         super();
     }
 
-    transform(syntaxText: string, mangler: Mangler) {
+    transform(syntaxText: string, mangler: ManglerContext<Mangler>) {
         const t1 = this.options.literals ? this.transformLiteral(syntaxText, mangler) : syntaxText;
         const t2 = this.options.property ? this.transformProperty(t1, mangler) : t1;
         return t2;
     }
 
-    transformLiteral(syntaxText: string, mangler: Mangler) {
+    transformLiteral(syntaxText: string, context: ManglerContext<Mangler>) {
         // References to CSS variables generally have a unique syntax,
         // but it can vary in different environments.
         //
@@ -37,6 +38,7 @@ export class CSSVariableReference extends ManglerReference {
         for (const regexp of regexps) {
             const name = regexp[0];
             const index = regexp.index + replacedLength;
+            const mangler = context.parent;
             const identifier = mangler.CSSVariableOf(name);
 
             if (identifier) {
@@ -55,7 +57,7 @@ export class CSSVariableReference extends ManglerReference {
         return syntaxText;
     }
 
-    transformProperty(syntaxText: string, mangler: Mangler) {
+    transformProperty(syntaxText: string, context: ManglerContext<Mangler>) {
         // This patterns matched by the following are:
         //
         // - var(--background, rgb(255, 255, 255))
@@ -72,6 +74,7 @@ export class CSSVariableReference extends ManglerReference {
             for (const local of locals) {
                 const name = local[0];
                 const index = (globalIndex + local.index) + replacedLength;
+                const mangler = context.parent;
                 const identifier = mangler.CSSVariableOf(name);
 
                 if (identifier) {
@@ -93,26 +96,33 @@ export class CSSVariableReference extends ManglerReference {
 }
 
 export class CSSQueryReference extends ManglerReference<CSSQueryManglerContext> {
-    transform(syntaxText: string, context: CSSQueryManglerContext): string {
+    transform(
+        syntaxText: string,
+        context: ManglerContext<CSSQueryManglerContext>
+    ): string {
         const t1 = this.transformHTML(syntaxText, context);
         const t2 = this.transformObject(t1, context);
         return t2;
     }
 
-    transformHTML(syntaxText: string, context: CSSQueryManglerContext): string {
+    transformHTML(
+        syntaxText: string,
+        context: ManglerContext<CSSQueryManglerContext>
+    ): string {
         const getPropertyRegexps = (name: string) => {
             return new RegExp(`(?<=<[\\w-]+ .*${name}\\s*=\\s*")[\\w\\s-]+(?=".*>)`, "g");
         }
 
         const cRegexps = syntaxText.matchAll(getPropertyRegexps("class"));
         const iRegexps = syntaxText.matchAll(getPropertyRegexps("id"));
+        const manglers = context.parent;
 
         const createPropertyObject = (regexp: RegExpExecArray, prefix: string, mangler: Mangler) => {
             return {name: regexp[0], index: regexp.index, prefix, mangler};
         }
 
-        const cProperties = Array.from(cRegexps).map(r => createPropertyObject(r, ".", context.classMangler));
-        const iProperties = Array.from(iRegexps).map(r => createPropertyObject(r, "#", context.idMangler));
+        const cProperties = Array.from(cRegexps).map(r => createPropertyObject(r, ".", manglers.classMangler));
+        const iProperties = Array.from(iRegexps).map(r => createPropertyObject(r, "#", manglers.idMangler));
         const properties = [...cProperties, ...iProperties];
 
         for (const property of properties) {
@@ -144,7 +154,10 @@ export class CSSQueryReference extends ManglerReference<CSSQueryManglerContext> 
     }
 
     /** TODO: It should be considered about dereference for variables. */
-    transformObject(syntaxText: string, context: CSSQueryManglerContext): string { // for JSX
+    transformObject(
+        syntaxText: string,
+        context: ManglerContext<CSSQueryManglerContext>
+    ): string { // for JSX
         const getPropertyRegexps = (name: string) => {
             return new RegExp(`(?<=\\{.*${name}:\\s*['"])[\\w\\s-]+(?=['"].*\\})`, "g");
         }
