@@ -72,7 +72,7 @@ export class CSSQueryDeclaration extends ManglerDeclaration<CSSQueryManglerConte
         //
         // See Also, A pattern such as .name:function(e) may defined from js.
         // (e.g. .clz32:function(e) in React)
-        const pesudoClass = /((:|::)(?!function\b)[\w-]+([\(\[][\w-]+([~|^$*]?=((".*")|('.*')|\d+)(\s[is])?)?[\)\]])?)?/.source;
+        const pesudoClass = /((:|::)(?!function\b)[\w-]+([\(\[][\w-]+([~|^$*]?=((".*?")|('.*?')|\d+)(\s[is])?)?[\)\]])?)?/.source;
 
         // This syntax matches className IdName that is a selector identifier that is like .a and #b
         const selectorCIPart = /(\.|#)[a-zA-Z0-9_-]+/.source;
@@ -85,7 +85,7 @@ export class CSSQueryDeclaration extends ManglerDeclaration<CSSQueryManglerConte
         // If you want details about combinators selector of CSS,
         // You can refer to https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Selectors/Combinators
         const contextCombinators = /[>+~,]/.source;
-        const contextBehind = `((\\s+${selectorId})|(\\s*${contextCombinators}\\s*${selectorId}))+`;
+        const contextBehind = `((\\s+?${selectorId})|(\\s*?${contextCombinators}\\s*?${selectorId}))+?`;
 
         // This patterns matched by the following are:
         //
@@ -94,7 +94,7 @@ export class CSSQueryDeclaration extends ManglerDeclaration<CSSQueryManglerConte
         // .a #b {}
         // .a:hover {}
         // .a:hover #b {}
-        const regexpText = `${selectorCI}(?=\\s*{|${contextBehind}\\s*{)`;
+        const regexpText = `${selectorCI}(?=\\s*?{|${contextBehind}\\s*?{)`;
         const regexpList = syntaxText.matchAll(new RegExp(regexpText, "g"));
 
         console.log(regexpText)
