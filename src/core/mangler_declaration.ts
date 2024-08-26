@@ -95,33 +95,34 @@ export class CSSQueryDeclaration extends ManglerDeclaration<CSSQueryManglerConte
         // .a:hover {}
         // .a:hover #b {}
         const regexpText = `${selectorCI}(?=\\s*?{|${contextBehind}\\s*?{)`;
-        const regexpList = syntaxText.matchAll(new RegExp(regexpText, "g"));
-
-        console.log(regexpText)
+        const regexpList = syntaxText.matchAll(/(\.|\#)\w+[^]*?{/g);
 
         let replacedLength = 0;
 
         for (const global of regexpList) {
-            const oldName = global[0];
-            const isClass = /^\./.test(oldName);
-            const manglers = context.parent;
-            const mangler = isClass ? manglers.classMangler : manglers.idMangler;
-            const newName = mangler.transform(oldName);
-            const length = oldName.length;
-            const prefix = isClass ? "." : "#";
-            const index = global.index + replacedLength;
-            
-            console.log(oldName);
+            const estimatedSyntax = global[0]; // wrapped to code block {}.
+            const estimatedQuerys = estimatedSyntax.matchAll(new RegExp(regexpText, "g"));
 
-            const result = StringUtil.replaceRange(
-                syntaxText,
-                index,
-                index + length,
-                prefix + newName
-            );
+            for (const local of estimatedQuerys) {
+                const oldName = local[0];
+                const isClass = /^\./.test(oldName);
+                const manglers = context.parent;
+                const mangler = isClass ? manglers.classMangler : manglers.idMangler;
+                const newName = mangler.transform(oldName);
+                const length = oldName.length;
+                const prefix = isClass ? "." : "#";
+                const index = (global.index + local.index) + replacedLength;
 
-            replacedLength += StringUtil.replacedLength(syntaxText, result);
-            syntaxText = result;
+                const result = StringUtil.replaceRange(
+                    syntaxText,
+                    index,
+                    index + length,
+                    prefix + newName
+                );
+
+                replacedLength += StringUtil.replacedLength(syntaxText, result);
+                syntaxText = result;
+            }
         }
 
         return syntaxText;
