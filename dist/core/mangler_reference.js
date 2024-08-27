@@ -8,6 +8,7 @@ class ManglerReference {
 }
 exports.ManglerReference = ManglerReference;
 class CSSVariableReference extends ManglerReference {
+    options;
     constructor(options) {
         super();
         this.options = options;

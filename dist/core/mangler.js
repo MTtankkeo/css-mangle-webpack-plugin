@@ -1,5 +1,4 @@
 "use strict";
-var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Mangler = void 0;
 /**
@@ -7,23 +6,30 @@ exports.Mangler = void 0;
  * with short identifier names in general.
 */
 class Mangler {
-    constructor() {
-        /**
-         * This value that is defining a value that increases each when
-         * a unique name is generated.
-         */
-        this.count = 0;
-        this.cache = new Map();
-    }
+    /** This static value that is defining lower-case alphabets of about a base-26. */
+    static lowerCases = "abcdefghijklmnopqrstuvwxyz";
+    /** This static value that is defining upper-case alphabets of about a base-26. */
+    static upperCases = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    /**
+     * This static value that is defining lower-case and upper-case
+     * alphabets of about a base-26.
+     */
+    static letterCases = this.lowerCases + this.upperCases;
+    /**
+     * This value that is defining a value that increases each when
+     * a unique name is generated.
+     */
+    count = 0;
+    cache = new Map();
     /**
      * Generates a unique name using a base-26 system based on
      * a given a unique count number.
      */
     createIdentifierName(count = this.count++) {
         let result = "";
-        let length = _a.letterCases.length;
+        let length = Mangler.letterCases.length;
         while (count >= 0) {
-            result = _a.letterCases[count % length] + result;
+            result = Mangler.letterCases[count % length] + result;
             if (count > 0) {
                 count = Math.floor(count / length) - 1;
             }
@@ -80,13 +86,3 @@ class Mangler {
     }
 }
 exports.Mangler = Mangler;
-_a = Mangler;
-/** This static value that is defining lower-case alphabets of about a base-26. */
-Mangler.lowerCases = "abcdefghijklmnopqrstuvwxyz";
-/** This static value that is defining upper-case alphabets of about a base-26. */
-Mangler.upperCases = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-/**
- * This static value that is defining lower-case and upper-case
- * alphabets of about a base-26.
- */
-Mangler.letterCases = _a.lowerCases + _a.upperCases;

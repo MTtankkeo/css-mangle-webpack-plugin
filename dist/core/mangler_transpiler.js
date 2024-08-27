@@ -12,12 +12,14 @@ class ManglerTranspiler {
 exports.ManglerTranspiler = ManglerTranspiler;
 /** This class provides functions in general use for the foundation of this package. */
 class DrivenManglerTranspiler extends ManglerTranspiler {
+    context;
     createMangler() {
         return new mangler_1.Mangler();
     }
 }
 exports.DrivenManglerTranspiler = DrivenManglerTranspiler;
 class CSSVariableManglerTranspiler extends DrivenManglerTranspiler {
+    options;
     constructor(options) {
         super();
         this.options = options;
@@ -32,8 +34,7 @@ class CSSVariableManglerTranspiler extends DrivenManglerTranspiler {
         return new mangler_context_1.ManglerContext(this.options, this.createMangler());
     }
     transform(asset) {
-        var _a;
-        const context = (_a = this.context) !== null && _a !== void 0 ? _a : this.createContext();
+        const context = this.context ?? this.createContext();
         const t1 = this.createManglerDeclaration().transform(asset, context);
         const t2 = this.createManglerReference().transform(((asset.syntaxText = t1), asset), context);
         return t2;
@@ -54,8 +55,7 @@ class CSSQueryManglerTranspiler extends DrivenManglerTranspiler {
         });
     }
     transform(asset) {
-        var _a;
-        const context = (_a = this.context) !== null && _a !== void 0 ? _a : this.createContext();
+        const context = this.context ?? this.createContext();
         const t1 = this.createManglerDeclaration().transform(asset, context);
         const t2 = this.createManglerReference().transform(((asset.syntaxText = t1), asset), context);
         return t2;
@@ -85,7 +85,7 @@ class CSSMinificationManglerTranspiler extends DrivenManglerTranspiler {
                 }
                 return parseInt(str);
             });
-            const rgbHexs = rgbNums.filter(v => v != null).map(val => val === null || val === void 0 ? void 0 : val.toString(16)); // to Hexadecimal
+            const rgbHexs = rgbNums.filter(v => v != null).map(val => val?.toString(16)); // to Hexadecimal
             const rgbHexStr = "#" + rgbHexs.join("");
             const index = global.index + replacedLength;
             const length = global[0].length;

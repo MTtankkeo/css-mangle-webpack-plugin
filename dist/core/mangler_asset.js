@@ -9,6 +9,8 @@ var ManglerAssetType;
     ManglerAssetType["OTHER"] = "other";
 })(ManglerAssetType || (exports.ManglerAssetType = ManglerAssetType = {}));
 class ManglerAsset {
+    syntaxText;
+    syntaxType;
     constructor(syntaxText, syntaxType) {
         this.syntaxText = syntaxText;
         this.syntaxType = syntaxType;

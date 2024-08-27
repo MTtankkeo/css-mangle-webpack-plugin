@@ -5,24 +5,24 @@ const mangler_transpiler_1 = require("../core/mangler_transpiler");
 const mangler_1 = require("../utils/mangler");
 require("colors");
 class CSSMangleWebpackPlugin {
+    options;
+    transpilers = [];
     constructor(options) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o;
         this.options = options;
-        this.transpilers = [];
-        if ((_a = options === null || options === void 0 ? void 0 : options.minify) !== null && _a !== void 0 ? _a : false) {
+        if (options?.minify ?? false) {
             this.transpilers.push(new mangler_transpiler_1.CSSMinificationManglerTranspiler());
         }
         // When is not active to compress about the identifiers of CSS.
-        if (!((_b = options === null || options === void 0 ? void 0 : options.mangle) !== null && _b !== void 0 ? _b : true))
+        if (!(options?.mangle ?? true))
             return;
         /** @ts-ignore */
-        const variableName = (_d = (_c = options === null || options === void 0 ? void 0 : options.mangle) === null || _c === void 0 ? void 0 : _c.variableName) !== null && _d !== void 0 ? _d : true;
+        const variableName = options?.mangle?.variableName ?? true;
         /** @ts-ignore */
-        const className = (_f = (_e = options === null || options === void 0 ? void 0 : options.mangle) === null || _e === void 0 ? void 0 : _e.className) !== null && _f !== void 0 ? _f : false;
+        const className = options?.mangle?.className ?? false;
         /** @ts-ignore */
-        const idName = (_h = (_g = options === null || options === void 0 ? void 0 : options.mangle) === null || _g === void 0 ? void 0 : _g.idName) !== null && _h !== void 0 ? _h : false;
+        const idName = options?.mangle?.idName ?? false;
         /** @ts-ignore */
-        const canUndeclared = (_l = (_k = (_j = options === null || options === void 0 ? void 0 : options.mangle) === null || _j === void 0 ? void 0 : _j.options) === null || _k === void 0 ? void 0 : _k.undeclared) !== null && _l !== void 0 ? _l : false;
+        const canUndeclared = options?.mangle?.options?.undeclared ?? false;
         // When a developer want to compress a variable names of CSS.
         if (variableName === true
             || variableName["property"] != null
@@ -30,21 +30,20 @@ class CSSMangleWebpackPlugin {
             this.transpilers.push(new mangler_transpiler_1.CSSVariableManglerTranspiler({
                 reversed: [],
                 canUndeclared: canUndeclared,
-                property: (_m = variableName["property"]) !== null && _m !== void 0 ? _m : true,
-                literals: (_o = variableName["literals"]) !== null && _o !== void 0 ? _o : true
+                property: variableName["property"] ?? true,
+                literals: variableName["literals"] ?? true
             }));
         }
         // When a developer want to compress a class-names of CSS.
-        if ((className !== null && className !== void 0 ? className : false) || (idName !== null && idName !== void 0 ? idName : false)) {
+        if ((className ?? false) || (idName ?? false)) {
             this.transpilers.push(new mangler_transpiler_1.CSSQueryManglerTranspiler());
         }
     }
     apply(compiler) {
-        var _a, _b, _c, _d, _e, _f, _g, _h;
-        const useMangleScript = !((_b = (_a = this.options) === null || _a === void 0 ? void 0 : _a.ignoreScript) !== null && _b !== void 0 ? _b : false);
-        const processStage = (_d = (_c = this.options) === null || _c === void 0 ? void 0 : _c.processStage) !== null && _d !== void 0 ? _d : "OPTIMIZE_INLINE";
-        const debugLogs = (_f = (_e = this.options) === null || _e === void 0 ? void 0 : _e.debugLogs) !== null && _f !== void 0 ? _f : "TIMEOUT";
-        const reversed = (_h = (_g = this.options) === null || _g === void 0 ? void 0 : _g.reserved) !== null && _h !== void 0 ? _h : [];
+        const useMangleScript = !(this.options?.ignoreScript ?? false);
+        const processStage = this.options?.processStage ?? "OPTIMIZE_INLINE";
+        const debugLogs = this.options?.debugLogs ?? "TIMEOUT";
+        const reversed = this.options?.reserved ?? [];
         compiler.hooks.compilation.tap("CSSMangleWebpackPlugin", (compilation) => {
             compilation.hooks.processAssets.tap({
                 name: "CSSMangleWebpackPlugin",
@@ -52,7 +51,6 @@ class CSSMangleWebpackPlugin {
                     ? compiler.webpack.Compilation.PROCESS_ASSETS_STAGE_OPTIMIZE_INLINE
                     : compiler.webpack.Compilation.PROCESS_ASSETS_STAGE_OPTIMIZE
             }, (assets) => {
-                var _a, _b, _c, _d;
                 for (const assetName in assets) {
                     // When a given assets name and reversed assets names matched.
                     if (reversed.find(name => name == assetName)) {
@@ -80,10 +78,10 @@ class CSSMangleWebpackPlugin {
                         }
                     }
                 }
-                if ((_b = ((_a = this.options) === null || _a === void 0 ? void 0 : _a.printLogs) == "ALL") !== null && _b !== void 0 ? _b : false) {
+                if (this.options?.printLogs == "ALL" ?? false) {
                     this.transpilers.forEach(e => e.context.parent.forEach(m => m.printLogs()));
                 }
-                if ((_d = ((_c = this.options) === null || _c === void 0 ? void 0 : _c.printLogs) == "WARNING") !== null && _d !== void 0 ? _d : false) {
+                if (this.options?.printLogs == "WARNING" ?? false) {
                     this.transpilers.forEach(e => e.context.parent.forEach(m => m.printLogsUnused()));
                 }
             });
