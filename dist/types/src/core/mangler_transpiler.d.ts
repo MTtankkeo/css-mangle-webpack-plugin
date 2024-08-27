@@ -1,18 +1,21 @@
 import { Mangler } from "./mangler";
+import { ManglerAsset } from "./mangler_asset";
+import { ManglerContext, ManglerContextOptions } from "./mangler_context";
 import { CSSQueryDeclaration, ManglerDeclaration } from "./mangler_declaration";
 import { CSSQueryReference, ManglerReference } from "./mangler_reference";
 export declare abstract class ManglerTranspiler<T = Mangler> {
     abstract createManglerDeclaration(): ManglerDeclaration<T>;
     abstract createManglerReference(): ManglerReference<T>;
     abstract createMangler(): Mangler;
-    abstract transform(syntaxText: string): string;
+    abstract createContext(): ManglerContext<T>;
+    abstract transform(asset: ManglerAsset): string;
 }
 /** This class provides functions in general use for the foundation of this package. */
 export declare abstract class DrivenManglerTranspiler<T = Mangler> extends ManglerTranspiler<T> {
-    manglers: Mangler[];
+    context: ManglerContext<T>;
     createMangler(): Mangler;
 }
-export interface CSSVariableManglerOptions {
+export interface CSSVariableManglerOptions extends ManglerContextOptions {
     property: boolean;
     literals: boolean;
 }
@@ -21,7 +24,8 @@ export declare class CSSVariableManglerTranspiler extends DrivenManglerTranspile
     constructor(options: CSSVariableManglerOptions);
     createManglerDeclaration(): ManglerDeclaration;
     createManglerReference(): ManglerReference;
-    transform(syntaxText: string): string;
+    createContext(): ManglerContext<Mangler>;
+    transform(asset: ManglerAsset): string;
 }
 export interface CSSQueryManglerContext {
     classMangler: Mangler;
@@ -30,5 +34,6 @@ export interface CSSQueryManglerContext {
 export declare class CSSQueryManglerTranspiler extends DrivenManglerTranspiler<CSSQueryManglerContext> {
     createManglerDeclaration(): CSSQueryDeclaration;
     createManglerReference(): CSSQueryReference;
-    transform(syntaxText: string): string;
+    createContext(): ManglerContext<CSSQueryManglerContext>;
+    transform(asset: ManglerAsset): string;
 }

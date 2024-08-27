@@ -3,6 +3,7 @@ import { Mangler } from "./mangler";
 import { ManglerAsset } from "./mangler_asset";
 import { ManglerContext } from "./mangler_context";
 import { CSSQueryManglerContext, CSSVariableManglerOptions } from "./mangler_transpiler";
+import { parse } from "recast";
 
 export abstract class ManglerReference<T = Mangler> {
     abstract transform(asset: ManglerAsset, context: ManglerContext<T>): string;
@@ -159,16 +160,14 @@ export class CSSQueryReference extends ManglerReference<CSSQueryManglerContext> 
         syntaxText: string,
         context: ManglerContext<CSSQueryManglerContext>
     ): string { // for JSX
-        const getPropertyRegexps = (name: string) => {
-            return new RegExp(`(?<=\\{.*${name}:\\s*['"])[\\w\\s-]+(?=['"].*\\})`, "g");
-        }
+        const source = `
+            const value1 = "background";
+            const value2 = {
+                className: value1
+            }
+        `;
 
-        const cProperties = syntaxText.matchAll(getPropertyRegexps("className"));
-        const iProperties = syntaxText.matchAll(getPropertyRegexps("id"));
-
-        for (const property of cProperties) {
-            console.log(property[0]);
-        }
+        console.log(parse(source));
 
         return syntaxText;
     }
