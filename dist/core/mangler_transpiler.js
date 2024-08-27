@@ -73,7 +73,7 @@ class CSSMinificationManglerTranspiler extends DrivenManglerTranspiler {
         return this.transformRGB(asset.syntaxText);
     }
     transformRGB(syntaxText) {
-        const regexpInst = /rgba?\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*(,\s*[0-1]+(\.\d+)?\s*)?\)\)/g;
+        const regexpInst = /rgba?\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*(,\s*[0-1]+(\.\d+)?\s*)?\)/g;
         const syntaxList = syntaxText.matchAll(regexpInst);
         let replacedLength = 0;
         for (const global of syntaxList) {

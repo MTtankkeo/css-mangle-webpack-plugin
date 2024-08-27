@@ -93,7 +93,7 @@ export class CSSMinificationManglerTranspiler extends DrivenManglerTranspiler<un
     }
 
     transformRGB(syntaxText: string): string {
-        const regexpInst = /rgba?\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*(,\s*[0-1]+(\.\d+)?\s*)?\)\)/g;
+        const regexpInst = /rgba?\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*(,\s*[0-1]+(\.\d+)?\s*)?\)/g;
         const syntaxList = syntaxText.matchAll(regexpInst);
 
         let replacedLength = 0;
