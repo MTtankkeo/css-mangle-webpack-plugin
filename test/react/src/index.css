@@ -1,9 +1,11 @@
 
 :root {
     --background: white;
-    --rearground: rgb(240, 242, 246);
+    --rearground: rgb(240, 242, 246, 0.5);
     --background: black;
 }
+
+@property --foreground {}
 
 .hello-world1 { }
 #hello-world1 { }

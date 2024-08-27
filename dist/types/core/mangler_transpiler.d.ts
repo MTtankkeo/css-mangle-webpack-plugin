@@ -4,8 +4,6 @@ import { ManglerContext, ManglerContextOptions } from "./mangler_context";
 import { CSSQueryDeclaration, ManglerDeclaration } from "./mangler_declaration";
 import { CSSQueryReference, ManglerReference } from "./mangler_reference";
 export declare abstract class ManglerTranspiler<T = Mangler> {
-    abstract createManglerDeclaration(): ManglerDeclaration<T>;
-    abstract createManglerReference(): ManglerReference<T>;
     abstract createMangler(): Mangler;
     abstract createContext(): ManglerContext<T>;
     abstract transform(asset: ManglerAsset): string;
@@ -36,4 +34,9 @@ export declare class CSSQueryManglerTranspiler extends DrivenManglerTranspiler<C
     createManglerReference(): CSSQueryReference;
     createContext(): ManglerContext<CSSQueryManglerContext>;
     transform(asset: ManglerAsset): string;
+}
+export declare class CSSMinificationManglerTranspiler extends DrivenManglerTranspiler<undefined> {
+    createContext(): ManglerContext<undefined>;
+    transform(asset: ManglerAsset): string;
+    transformRGB(syntaxText: string): string;
 }

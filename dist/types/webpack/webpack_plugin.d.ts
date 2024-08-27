@@ -16,6 +16,7 @@ export interface CSSMangleWebpackPluginOptions {
     printLogs?: "ALL" | "WARNING" | "NONE";
     debugLogs?: "ALL" | "TIMEOUT" | "NONE";
     reserved?: CSSMangleReserved;
+    minify?: boolean;
     mangle?: boolean | {
         variableName?: boolean | CSSVariableManglerOptions;
         className?: boolean;

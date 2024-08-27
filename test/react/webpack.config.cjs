@@ -7,7 +7,7 @@ const config = {
     mode: "production",
     entry: "./src/index.tsx",
     plugins: [
-        new CSSMangleWebpackPlugin({mangle: {className: true}}),
+        new CSSMangleWebpackPlugin({minify: true, mangle: {className: false}}),
         new MiniCssExtractPlugin(),
         new HTMLWebpackPlugin({
             template: "./src/index.html",

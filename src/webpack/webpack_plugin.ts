@@ -1,5 +1,5 @@
 import { Compiler } from "webpack";
-import { CSSQueryManglerTranspiler, CSSVariableManglerOptions, CSSVariableManglerTranspiler, DrivenManglerTranspiler } from "../core/mangler_transpiler";
+import { CSSMinificationManglerTranspiler, CSSQueryManglerTranspiler, CSSVariableManglerOptions, CSSVariableManglerTranspiler, DrivenManglerTranspiler } from "../core/mangler_transpiler";
 import { CSSMangleReserved } from "../types";
 import { ManglerUtil } from "../utils/mangler";
 import "colors";
@@ -16,8 +16,9 @@ export interface CSSMangleWebpackPluginOptions {
      */
     processStage?: "OPTIMIZE" | "OPTIMIZE_INLINE";
     printLogs?: "ALL" | "WARNING" | "NONE";
-    debugLogs?: "ALL" | "TIMEOUT" | "NONE",
-    reserved?: CSSMangleReserved,
+    debugLogs?: "ALL" | "TIMEOUT" | "NONE";
+    reserved?: CSSMangleReserved;
+    minify?: boolean;
     mangle?: boolean | {
         variableName?: boolean | CSSVariableManglerOptions;
         className?: boolean;
@@ -36,6 +37,10 @@ export class CSSMangleWebpackPlugin {
     transpilers: DrivenManglerTranspiler<any>[] = [];
 
     constructor(public options: CSSMangleWebpackPluginOptions) {
+        if (options?.minify ?? false) {
+            this.transpilers.push(new CSSMinificationManglerTranspiler());
+        }
+
         // When is not active to compress about the identifiers of CSS.
         if (!(options?.mangle ?? true)) return
 
