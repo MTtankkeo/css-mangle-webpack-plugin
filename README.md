@@ -98,4 +98,5 @@ const literals = "--a";
 | printLogs | Not ready a comment about this. | "ALL" \| "WARNING" \| "NONE"
 | debugLogs | Not ready a comment about this. | "ALL" \| "TIMEOUT" \| "NONE"
 | reserved | Not ready a comment about this. | string[]
+| minify | Not ready a comment about this. | boolean
 | mangle | Not ready a comment about this. | { variableName?: boolean \| CSSVariableManglerOptions, className?: boolean, idName?: boolean, options: ... } \| boolean
