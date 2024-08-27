@@ -116,7 +116,7 @@ export class CSSQueryReference extends ManglerReference<CSSQueryManglerContext> 
         context: ManglerContext<CSSQueryManglerContext>
     ): string {
         const getPropertyRegexps = (name: string) => {
-            return new RegExp(`(?<=<[\\w-]+ .*${name}\\s*=\\s*")[\\w\\s-]+(?=".*>)`, "g");
+            return new RegExp(`(?<=<[\\w-]+ .*${name}\\s*=\\s*")[\\w\\s-]+?(?=".*>)`, "g");
         }
 
         const cRegexps = syntaxText.matchAll(getPropertyRegexps("class"));
