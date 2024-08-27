@@ -1,0 +1,92 @@
+"use strict";
+var _a;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Mangler = void 0;
+/**
+ * This class declared to replace long unique identifiers
+ * with short identifier names in general.
+*/
+class Mangler {
+    constructor() {
+        /**
+         * This value that is defining a value that increases each when
+         * a unique name is generated.
+         */
+        this.count = 0;
+        this.cache = new Map();
+    }
+    /**
+     * Generates a unique name using a base-26 system based on
+     * a given a unique count number.
+     */
+    createIdentifierName(count = this.count++) {
+        let result = "";
+        let length = _a.letterCases.length;
+        while (count >= 0) {
+            result = _a.letterCases[count % length] + result;
+            if (count > 0) {
+                count = Math.floor(count / length) - 1;
+            }
+            else {
+                break;
+            }
+        }
+        return result;
+    }
+    /**
+     * Transforms input string to a new unique identifier,
+     * caching the result, and returns it.
+     */
+    transform(from) {
+        let object = this.cache.get(from);
+        if (object) {
+            return object.referenceCount += 1, object.identifierName;
+        }
+        this.cache.set(from, {
+            originalName: from,
+            identifierName: this.createIdentifierName(),
+            referenceCount: 0, // initial count must be zero.
+        });
+        return this.cache.get(from).identifierName;
+    }
+    get unused() {
+        return Array.from(this.cache.values()).filter(c => c.referenceCount == 0);
+    }
+    /**
+     * Returns a short unique identifier if a short unique identifier for
+     * a given unique identifier has already been created and exists.
+    */
+    CSSVariableOf(value, canMangle = false) {
+        return this.cache.get(value) || canMangle ? `--${this.transform(value)}` : null;
+    }
+    CSSPropertyOf(value, prefix) {
+        return this.cache.get(value = prefix + value) ? `${prefix}${this.transform(value)}` : null;
+    }
+    /**
+     * Prints the informations of all about this mangler.
+     * i.e. this is just printing for debugging.
+     */
+    printLogs() {
+        console.log(this.cache);
+    }
+    /**
+     * Prints the informations of unreferenced unique identifier.
+     * i.e. this is just printing for warning.
+     */
+    printLogsUnused() {
+        for (const object of this.unused) {
+            console.log(`${object.originalName} is not referenced.`);
+        }
+    }
+}
+exports.Mangler = Mangler;
+_a = Mangler;
+/** This static value that is defining lower-case alphabets of about a base-26. */
+Mangler.lowerCases = "abcdefghijklmnopqrstuvwxyz";
+/** This static value that is defining upper-case alphabets of about a base-26. */
+Mangler.upperCases = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+/**
+ * This static value that is defining lower-case and upper-case
+ * alphabets of about a base-26.
+ */
+Mangler.letterCases = _a.lowerCases + _a.upperCases;

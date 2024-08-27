@@ -1,11 +1,14 @@
 {
     "compilerOptions": {
         "lib": ["ES2023", "ES2023.Collection", "DOM"],
-        "module": "ES2022",
+        "module": "CommonJS",
         "target": "ES2015",
+        "outDir": "./dist/",
         "moduleResolution": "Node",
+        "skipLibCheck": true,
         "declaration": true,
-        "declarationDir": "./dist/types/"
+        "declarationDir": "./dist/types/",
     },
-    "include": ["./src/**/*"]
+    "include": ["./src/**/*"],
+    "exclude": ["./node_modules"]
 }
