@@ -22,7 +22,6 @@ const globals = {
 const options = {
     plugins: plugins,
     input: "./src/index.ts",
-    external: ["@swc/core"], // 외부 모듈로 처리
     output: [
         { file: "./dist/index.esm.js", format: "esm", name: "CSSMangleWebpackPlugin", exports: "named", globals: globals },
         { file: "./dist/index.umd.js", format: "umd", name: "CSSMangleWebpackPlugin", exports: "named", globals: globals }

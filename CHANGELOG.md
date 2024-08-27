@@ -15,3 +15,6 @@
 # 1.0.0-alpha7
 - Fixed to transform variables using even upper-case alphabets.
 - Added undeclared into options property, this is whether an undeclared identifier in this webpack plugin would still be considered for minification.
+
+# 1.0.0-alpha8
+- Added debugLogs into options property, This is whether about primarily an option for a user to output additional information to the CMD.
