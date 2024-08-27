@@ -1,5 +1,5 @@
 <div align="center">
-  <img width="200px" src="https://github.com/user-attachments/assets/75212c43-14de-471d-aa38-7630a2103510">
+  <img width="200px" src="https://github.com/user-attachments/assets/a621ed86-c8a0-41ee-92e8-0a576c20e2e5">
   <h1>CSS Mangle Webpack Plugin</h1>
   <table>
         <thead>
