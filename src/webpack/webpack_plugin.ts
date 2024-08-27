@@ -1,6 +1,8 @@
 import { Compiler } from "webpack";
 import { CSSQueryManglerTranspiler, CSSVariableManglerOptions, CSSVariableManglerTranspiler, DrivenManglerTranspiler } from "../core/mangler_transpiler";
 import { CSSMangleReserved } from "../types";
+import { ManglerAssetType } from "../core/mangler_asset";
+import { ManglerUtil } from "../utils/mangler";
 
 export interface CSSMangleWebpackPluginOptions {
     /**
@@ -95,7 +97,10 @@ export class CSSMangleWebpackPlugin {
 
                                 compilation.updateAsset(
                                     assetName,
-                                    new compiler.webpack.sources.RawSource(transpiler.transform(source))
+                                    new compiler.webpack.sources.RawSource(transpiler.transform({
+                                        syntaxText: source,
+                                        syntaxType: ManglerUtil.assetTypeOf(assetName)
+                                    }))
                                 );
                             }
                         }

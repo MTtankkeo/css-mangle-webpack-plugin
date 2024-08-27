@@ -1,10 +1,11 @@
 import { StringUtil } from "../utils/string";
 import { Mangler } from "./mangler";
+import { ManglerAsset } from "./mangler_asset";
 import { ManglerContext } from "./mangler_context";
 import { CSSQueryManglerContext } from "./mangler_transpiler";
 
 export abstract class ManglerDeclaration<T = Mangler> {
-    abstract transform(syntaxText: string, context: ManglerContext<T>): string;
+    abstract transform(asset: ManglerAsset, context: ManglerContext<T>): string;
 }
 
 export class CSSVariableDeclaration extends ManglerDeclaration {
@@ -12,7 +13,7 @@ export class CSSVariableDeclaration extends ManglerDeclaration {
      * Parse a given syntex strings and based on declare identifier
      * name to [Mangler].
      */
-    transform(syntaxText: string, context: ManglerContext<Mangler>): string {
+    transform(asset: ManglerAsset, context: ManglerContext<Mangler>): string {
         // In CSS variable declarations, a unique syntax is generally used,
         // making identification relatively straightforward.
         //
@@ -27,10 +28,11 @@ export class CSSVariableDeclaration extends ManglerDeclaration {
         // See Also, where "background" is a unique identifier,
         // so any character form is acceptable.
         //
-        const result1 = syntaxText.matchAll(/--[\w-]+(?=\s*: *.+(;|[\n\s]*}))/g);
-        const result2 = syntaxText.matchAll(/(?<=@property )--[\w-]+(?=\s*{[^{}]*})/g);
+        const result1 = asset.syntaxText.matchAll(/--[\w-]+(?=\s*: *.+(;|[\n\s]*}))/g);
+        const result2 = asset.syntaxText.matchAll(/(?<=@property )--[\w-]+(?=\s*{[^{}]*})/g);
         const result = [...result1, ...result2];
         let replacedLength = 0;
+        let syntaxText = asset.syntaxText;
 
         for (const global of result) {
             const name = global[0];
@@ -54,7 +56,7 @@ export class CSSVariableDeclaration extends ManglerDeclaration {
 
 export class CSSQueryDeclaration extends ManglerDeclaration<CSSQueryManglerContext> {
     transform(
-        syntaxText: string,
+        asset: ManglerAsset,
         context: ManglerContext<CSSQueryManglerContext>
     ): string {
         // this syntex is a pseudo-class of CSS.
@@ -95,9 +97,10 @@ export class CSSQueryDeclaration extends ManglerDeclaration<CSSQueryManglerConte
         // .a:hover {}
         // .a:hover #b {}
         const regexpText = `${selectorCI}(?=\\s*?{|${contextBehind}\\s*?{)`;
-        const regexpList = syntaxText.matchAll(/(\.|\#)\w+[^]*?{/g);
+        const regexpList = asset.syntaxText.matchAll(/(\.|\#)\w+[^]*?{/g);
 
         let replacedLength = 0;
+        let syntaxText = asset.syntaxText;
 
         for (const global of regexpList) {
             const estimatedSyntax = global[0]; // wrapped to code block {}.

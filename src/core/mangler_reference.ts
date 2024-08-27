@@ -1,10 +1,11 @@
 import { StringUtil } from "../utils/string";
 import { Mangler } from "./mangler";
+import { ManglerAsset } from "./mangler_asset";
 import { ManglerContext } from "./mangler_context";
 import { CSSQueryManglerContext, CSSVariableManglerOptions } from "./mangler_transpiler";
 
 export abstract class ManglerReference<T = Mangler> {
-    abstract transform(syntaxText: string, context: ManglerContext<T>): string;
+    abstract transform(asset: ManglerAsset, context: ManglerContext<T>): string;
 }
 
 export class CSSVariableReference extends ManglerReference {
@@ -12,8 +13,8 @@ export class CSSVariableReference extends ManglerReference {
         super();
     }
 
-    transform(syntaxText: string, mangler: ManglerContext<Mangler>) {
-        const t1 = this.options.literals ? this.transformLiteral(syntaxText, mangler) : syntaxText;
+    transform(asset: ManglerAsset, mangler: ManglerContext<Mangler>) {
+        const t1 = this.options.literals ? this.transformLiteral(asset.syntaxText, mangler) : asset.syntaxText;
         const t2 = this.options.property ? this.transformProperty(t1, mangler) : t1;
         return t2;
     }
@@ -97,10 +98,10 @@ export class CSSVariableReference extends ManglerReference {
 
 export class CSSQueryReference extends ManglerReference<CSSQueryManglerContext> {
     transform(
-        syntaxText: string,
+        asset: ManglerAsset,
         context: ManglerContext<CSSQueryManglerContext>
     ): string {
-        const t1 = this.transformHTML(syntaxText, context);
+        const t1 = this.transformHTML(asset.syntaxText, context);
         const t2 = this.transformObject(t1, context);
         return t2;
     }
