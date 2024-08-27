@@ -1,9 +1,9 @@
 import { StringUtil } from "../utils/string";
 import { Mangler } from "./mangler";
-import { ManglerAsset } from "./mangler_asset";
+import { ManglerAsset, ManglerAssetType } from "./mangler_asset";
 import { ManglerContext } from "./mangler_context";
 import { CSSQueryManglerContext, CSSVariableManglerOptions } from "./mangler_transpiler";
-import { parse } from "recast";
+import * as recast from "recast";
 
 export abstract class ManglerReference<T = Mangler> {
     abstract transform(asset: ManglerAsset, context: ManglerContext<T>): string;
@@ -103,8 +103,12 @@ export class CSSQueryReference extends ManglerReference<CSSQueryManglerContext> 
         context: ManglerContext<CSSQueryManglerContext>
     ): string {
         const t1 = this.transformHTML(asset.syntaxText, context);
-        const t2 = this.transformObject(t1, context);
-        return t2;
+
+        if (asset.syntaxType == ManglerAssetType.SCRIPT) {
+            return this.transformScript(t1, context);
+        } else {
+            return t1;
+        }
     }
 
     transformHTML(
@@ -156,18 +160,30 @@ export class CSSQueryReference extends ManglerReference<CSSQueryManglerContext> 
     }
 
     /** TODO: It should be considered about dereference for variables. */
-    transformObject(
+    transformScript(
         syntaxText: string,
         context: ManglerContext<CSSQueryManglerContext>
     ): string { // for JSX
         const source = `
             const value1 = "background";
-            const value2 = {
-                className: value1
-            }
+            const value2 = {className: value1}
+            const value3 = {className: "hello, world!"}
         `;
 
-        console.log(parse(source));
+        const AST = recast.parse(source);
+
+        recast.visit(AST, {
+            visitProperty(path) {
+                const kName: string = path.node.key["name"];
+                const value = path.node.value;
+
+                if (kName == "className") { // "className" of object property.
+                    console.log(value);
+                }
+
+                return false;
+            }
+        })
 
         return syntaxText;
     }

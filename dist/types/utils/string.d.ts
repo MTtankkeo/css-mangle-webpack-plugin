@@ -10,4 +10,6 @@ export declare class StringUtil {
      * and a given new string.
      */
     static replacedLength(oldStr: string, newStr: string): number;
+    /** Returns the bytes size of a given string value. */
+    static BytesOf(str: string): number;
 }

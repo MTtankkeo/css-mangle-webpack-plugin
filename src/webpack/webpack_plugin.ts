@@ -1,8 +1,8 @@
 import { Compiler } from "webpack";
 import { CSSQueryManglerTranspiler, CSSVariableManglerOptions, CSSVariableManglerTranspiler, DrivenManglerTranspiler } from "../core/mangler_transpiler";
 import { CSSMangleReserved } from "../types";
-import { ManglerAssetType } from "../core/mangler_asset";
 import { ManglerUtil } from "../utils/mangler";
+import "colors";
 
 export interface CSSMangleWebpackPluginOptions {
     /**
@@ -16,6 +16,7 @@ export interface CSSMangleWebpackPluginOptions {
      */
     processStage?: "OPTIMIZE" | "OPTIMIZE_INLINE";
     printLogs?: "ALL" | "WARNING" | "NONE";
+    debugLogs?: "ALL" | "TIMEOUT" | "NONE",
     reserved?: CSSMangleReserved,
     mangle?: boolean | {
         variableName?: boolean | CSSVariableManglerOptions;
@@ -71,6 +72,7 @@ export class CSSMangleWebpackPlugin {
     apply(compiler: Compiler) {
         const useMangleScript = !(this.options?.ignoreScript ?? false);
         const processStage = this.options?.processStage ?? "OPTIMIZE_INLINE";
+        const debugLogs = this.options?.debugLogs ?? "TIMEOUT";
         const reversed = this.options?.reserved ?? [];
 
         compiler.hooks.compilation.tap("CSSMangleWebpackPlugin", (compilation) => {
@@ -92,16 +94,27 @@ export class CSSMangleWebpackPlugin {
                          || assetName.endsWith(".js")  && useMangleScript
                          || assetName.endsWith(".jsx") && useMangleScript
                          || assetName.endsWith(".css")) {
+                            const startTime = performance.now();
+
                             for (const transpiler of this.transpilers) {
                                 const source = assets[assetName].source().toString();
-
+                                const result = transpiler.transform({
+                                    syntaxText: source,
+                                    syntaxType: ManglerUtil.assetTypeOf(assetName)
+                                });
+;
                                 compilation.updateAsset(
                                     assetName,
-                                    new compiler.webpack.sources.RawSource(transpiler.transform({
-                                        syntaxText: source,
-                                        syntaxType: ManglerUtil.assetTypeOf(assetName)
-                                    }))
+                                    new compiler.webpack.sources.RawSource(result)
                                 );
+                            }
+
+                            if (debugLogs == "ALL" || debugLogs == "TIMEOUT") {
+                                const timeout = Math.round(performance.now() - startTime); // ms
+                                const message = "is minimized by (css-mangle-webpack-plugin)";
+
+                                // Notifies a developer the current asset-name and timeout to microseconds format.
+                                console.log("asset " + assetName.green.bold + ` ${message} ` + `[${timeout}ms]`.yellow.bold);
                             }
                         }
                     }

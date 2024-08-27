@@ -22,4 +22,10 @@ export class StringUtil {
     static replacedLength(oldStr: string, newStr: string) {
         return newStr.length - oldStr.length;
     }
+
+    /** Returns the bytes size of a given string value. */
+    static BytesOf(str: string) {
+        return new TextEncoder().encode(str).length;
+    }
+
 }
