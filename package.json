@@ -12,9 +12,14 @@
   "keywords": [
     "css",
     "webpack",
-    "plugin",
+    "webpack-plugin",
+    "mangle",
     "mangler",
+    "minimize",
     "minifier",
+    "minify",
+    "optimize",
+    "potimizer",
     "jsx"
   ],
   "scripts": {
