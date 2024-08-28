@@ -16,5 +16,5 @@ export declare class CSSQueryReference extends ManglerReference<CSSQueryManglerC
     transform(asset: ManglerAsset, context: ManglerContext<CSSQueryManglerContext>): string;
     transformHTML(syntaxText: string, context: ManglerContext<CSSQueryManglerContext>): string;
     /** TODO: It should be considered about dereference for variables. */
-    transformScript(syntaxText: string, context: ManglerContext<CSSQueryManglerContext>): string;
+    transformScript(sources: string, context: ManglerContext<CSSQueryManglerContext>): string;
 }

@@ -162,25 +162,13 @@ export class CSSQueryReference extends ManglerReference<CSSQueryManglerContext> 
 
     /** TODO: It should be considered about dereference for variables. */
     transformScript(
-        syntaxText: string,
+        sources: string,
         context: ManglerContext<CSSQueryManglerContext>
     ): string { // for JSX
-        const source = `
-            const func = (a) => {
-                const value2 = {className: a}
-                const value3 = {className: "hello, world!"}
-            }
+        const parser = new ManglerBackrefer(sources);
+        parser.setPropertyByName("className", (oldName) => context.parent.classMangler.transform(oldName));
+        parser.setPropertyByName("id", (oldName) => context.parent.idMangler.transform(oldName));
 
-            func("Hello, World!");
-        `;
-
-        const parser = new ManglerBackrefer(source);
-        parser.setPropertyByName("className", (oldName) => {
-            return `${oldName} 변경 됨`; context.parent.classMangler.transform(oldName);
-        });
-
-        console.log(parser.code);
-
-        return syntaxText;
+        return parser.code;
     }
 }

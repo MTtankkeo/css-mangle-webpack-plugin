@@ -115,22 +115,11 @@ class CSSQueryReference extends ManglerReference {
         return syntaxText;
     }
     /** TODO: It should be considered about dereference for variables. */
-    transformScript(syntaxText, context) {
-        const source = `
-            const func = (a) => {
-                const value2 = {className: a}
-                const value3 = {className: "hello, world!"}
-            }
-
-            func("Hello, World!");
-        `;
-        const parser = new mangler_backrefer_1.ManglerBackrefer(source);
-        parser.setPropertyByName("className", (oldName) => {
-            return `${oldName} 변경 됨`;
-            context.parent.classMangler.transform(oldName);
-        });
-        console.log(parser.code);
-        return syntaxText;
+    transformScript(sources, context) {
+        const parser = new mangler_backrefer_1.ManglerBackrefer(sources);
+        parser.setPropertyByName("className", (oldName) => context.parent.classMangler.transform(oldName));
+        parser.setPropertyByName("id", (oldName) => context.parent.idMangler.transform(oldName));
+        return parser.code;
     }
 }
 exports.CSSQueryReference = CSSQueryReference;
