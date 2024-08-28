@@ -6,6 +6,10 @@
     --background: black;
 }
 
+.hello[a="hello world!"] {
+
+}
+
 @property --foreground {}
 
 .hello-world1 { }

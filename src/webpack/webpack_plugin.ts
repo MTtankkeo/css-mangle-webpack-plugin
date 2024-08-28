@@ -39,10 +39,11 @@ export class CSSMangleWebpackPlugin {
     constructor(public options: CSSMangleWebpackPluginOptions) {
         if (options?.minify ?? false) {
             const minifyOptions = options.minify as CSSMinificationManglerOptions;
-            
+
             this.transpilers.push(new CSSMinificationManglerTranspiler({
                 rgbToHex: minifyOptions?.rgbToHex ?? true,
                 comments: minifyOptions?.comments ?? true,
+                // escapeSequence: minifyOptions?.escapeSequence ?? true
             }));
         }
 

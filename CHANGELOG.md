@@ -22,6 +22,6 @@
 # 1.0.0-alpha9
 - Added minify into options property, This is whether to use additional features, annotation removal, and optimization to turn rgb into hex.
 
-# 1.0.0-alpha10
+# 1.0.0-alpha10 ~ 11
 - Updated about minify into options property.
 - Fixed to share related [ManglerContext] instances with each other in the compilation assets files.

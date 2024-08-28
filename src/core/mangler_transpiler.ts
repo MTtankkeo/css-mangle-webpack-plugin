@@ -82,6 +82,7 @@ export class CSSQueryManglerTranspiler extends DrivenManglerTranspiler<CSSQueryM
 export interface CSSMinificationManglerOptions {
     rgbToHex: boolean;
     comments: boolean;
+    // escapeSequence: boolean;
 }
 
 export class CSSMinificationManglerTranspiler extends DrivenManglerTranspiler<undefined> {
@@ -99,7 +100,8 @@ export class CSSMinificationManglerTranspiler extends DrivenManglerTranspiler<un
         }
 
         const t1 = this.options.rgbToHex ? this.transformRGB(asset.syntaxText) : asset.syntaxText;
-        const t2 = this.options.comments ? this.transformComments(asset.syntaxText) : t1;
+        const t2 = this.options.comments ? this.transformComments(t1) : t1;
+        // const t3 = this.options.escapeSequence ? this.transformEscapeSequence(t2) : t2;
         return t2;
     }
 
@@ -157,6 +159,42 @@ export class CSSMinificationManglerTranspiler extends DrivenManglerTranspiler<un
 
             replacedLength += StringUtil.replacedLength(syntaxText, result);
             syntaxText = result;
+        }
+
+        return syntaxText;
+    }
+
+    transformEscapeSequence(syntaxText: string): string {
+        const ignoreRegexpInst = /".+?"|'.+?'|\/\*.+?\*\//g; // Refer to safe-area.
+        const ignoreRegexpList = syntaxText.matchAll(ignoreRegexpInst);
+        const ignoreRanges: {start: number, end: number}[] = [];
+
+        for (const global of ignoreRegexpList) {
+            ignoreRanges.push({start: global.index, end: global.index + global[0].length});
+        }
+
+        const regexpInst = /[\n\s]+?/g;
+        const regexpList = syntaxText.matchAll(regexpInst);
+
+        let replacedLength = 0;
+        
+        for (const global of regexpList) {
+            const inner = global[0];
+            const index = global.index + replacedLength;
+            const length = inner.length;
+            const inRange = ignoreRanges.find(r => r.start <= index && r.end >= index);
+            const isIgnore = inRange != null;
+            if (!isIgnore) {
+                const result = StringUtil.replaceRange(
+                    syntaxText,
+                    index,
+                    index + length,
+                    "" // to empty string.
+                );
+
+                replacedLength += StringUtil.replacedLength(syntaxText, result);
+                syntaxText = result;
+            }
         }
 
         return syntaxText;

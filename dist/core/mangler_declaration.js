@@ -60,7 +60,7 @@ class CSSQueryDeclaration extends ManglerDeclaration {
         //
         // See Also, A pattern such as .name:function(e) may defined from js.
         // (e.g. .clz32:function(e) in React)
-        const pesudoClass = /((:|::)(?!function\b)[\w-]+([\(\[][\w-]+([~|^$*]?=((".*?")|('.*?')|\d+)(\s[is])?)?[\)\]])?)?/.source;
+        const pesudoClass = /(((:|::)(?!function\b)[\w-]+)?([\(\[][\w-]+([~|^$*]?=((".*?")|('.*?')|\d+)(\s[is])?)?[\)\]])?)?/.source;
         // This syntax matches className IdName that is a selector identifier that is like .a and #b
         const selectorCIPart = /(\.|#)[a-zA-Z0-9_-]+/.source;
         const selectorCI = `${selectorCIPart}${pesudoClass}`;
@@ -86,7 +86,7 @@ class CSSQueryDeclaration extends ManglerDeclaration {
             const estimatedSyntax = global[0]; // wrapped to code block {}.
             const estimatedQuerys = estimatedSyntax.matchAll(new RegExp(regexpText, "g"));
             for (const local of estimatedQuerys) {
-                const oldName = local[0];
+                const oldName = local[0].match(/(\.|\#)[\w-]+/g)[0];
                 const isClass = /^\./.test(oldName);
                 const mangler = isClass ? context.parent.classMangler : context.parent.idMangler;
                 const newName = isClass
@@ -100,7 +100,6 @@ class CSSQueryDeclaration extends ManglerDeclaration {
                 syntaxText = result;
             }
         }
-        console.log(context.parent);
         return syntaxText;
     }
 }
