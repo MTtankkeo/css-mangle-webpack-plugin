@@ -5,7 +5,7 @@
         <thead>
           <tr>
             <th>Version</th>
-            <th>v1.0.0-alpha8</th>
+            <th>v1.0.0-alpha9</th>
           </tr>
         </tbody>
     </table>
@@ -22,9 +22,10 @@ This webpack plugin package is a CSS mangler that globally optimizes and shorten
 ## Support Current Status
 | Type | Status | Support |
 | ---- | ------ | ------- |
-| Variable | Alpha and tested for required dev-enviorment | ✅ |
+| Variable | Alpha and tested for required dev-enviorment. | ✅ |
 | Class | Not supported by default currently, but experimental stage. | 🟧 |
 | Id | Not supported by default currently, but experimental stage. | 🟧 |
+| Minify | Alpha and tested for required dev-enviorment, but this is optional. | 🟨 |
 | Others | Not supported | 🟥 |
 
 # Install by NPM
@@ -98,5 +99,5 @@ const literals = "--a";
 | printLogs | Not ready a comment about this. | "ALL" \| "WARNING" \| "NONE"
 | debugLogs | Not ready a comment about this. | "ALL" \| "TIMEOUT" \| "NONE"
 | reserved | Not ready a comment about this. | string[]
-| minify | Not ready a comment about this. | boolean
+| minify | Not ready a comment about this. | boolean \| Partial<CSSMinificationManglerOptions>
 | mangle | Not ready a comment about this. | { variableName?: boolean \| CSSVariableManglerOptions, className?: boolean, idName?: boolean, options: ... } \| boolean

@@ -1,5 +1,5 @@
 import { Compiler } from "webpack";
-import { CSSVariableManglerOptions, DrivenManglerTranspiler } from "../core/mangler_transpiler";
+import { CSSMinificationManglerOptions, CSSVariableManglerOptions, DrivenManglerTranspiler } from "../core/mangler_transpiler";
 import { CSSMangleReserved } from "../types";
 import "colors";
 export interface CSSMangleWebpackPluginOptions {
@@ -16,7 +16,7 @@ export interface CSSMangleWebpackPluginOptions {
     printLogs?: "ALL" | "WARNING" | "NONE";
     debugLogs?: "ALL" | "TIMEOUT" | "NONE";
     reserved?: CSSMangleReserved;
-    minify?: boolean;
+    minify?: boolean | Partial<CSSMinificationManglerOptions>;
     mangle?: boolean | {
         variableName?: boolean | CSSVariableManglerOptions;
         className?: boolean;

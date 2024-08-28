@@ -35,8 +35,15 @@ export declare class CSSQueryManglerTranspiler extends DrivenManglerTranspiler<C
     createContext(): ManglerContext<CSSQueryManglerContext>;
     transform(asset: ManglerAsset): string;
 }
+export interface CSSMinificationManglerOptions {
+    rgbToHex: boolean;
+    comments: boolean;
+}
 export declare class CSSMinificationManglerTranspiler extends DrivenManglerTranspiler<undefined> {
+    options: CSSMinificationManglerOptions;
+    constructor(options: CSSMinificationManglerOptions);
     createContext(): ManglerContext<undefined>;
     transform(asset: ManglerAsset): string;
     transformRGB(syntaxText: string): string;
+    transformComments(syntaxText: string): string;
 }

@@ -3,7 +3,7 @@
   "description": "This webpack plugin package is a CSS mangler that globally optimizes and shortens identifier names.",
   "repository": "https://github.com/MTtankkeo/css-mangle-webpack-plugin",
   "author": "Dev Ttangkong",
-  "version": "1.0.0-alpha8",
+  "version": "1.0.0-alpha9",
   "license": "MIT",
   "main": "./dist/index.js",
   "types": "./dist/types/index.d.ts",

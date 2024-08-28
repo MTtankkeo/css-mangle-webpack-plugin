@@ -10,7 +10,11 @@ class CSSMangleWebpackPlugin {
     constructor(options) {
         this.options = options;
         if (options?.minify ?? false) {
-            this.transpilers.push(new mangler_transpiler_1.CSSMinificationManglerTranspiler());
+            const minifyOptions = options.minify;
+            this.transpilers.push(new mangler_transpiler_1.CSSMinificationManglerTranspiler({
+                rgbToHex: minifyOptions?.rgbToHex ?? true,
+                comments: minifyOptions?.comments ?? true,
+            }));
         }
         // When is not active to compress about the identifiers of CSS.
         if (!(options?.mangle ?? true))

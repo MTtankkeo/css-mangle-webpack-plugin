@@ -18,3 +18,6 @@
 
 # 1.0.0-alpha8
 - Added debugLogs into options property, This is whether about primarily an option for a user to output additional information to the CMD.
+
+# 1.0.0-alpha9
+- Added minify into options property, This is whether to use additional features, annotation removal, and optimization to turn rgb into hex.

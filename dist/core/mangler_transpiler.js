@@ -63,6 +63,11 @@ class CSSQueryManglerTranspiler extends DrivenManglerTranspiler {
 }
 exports.CSSQueryManglerTranspiler = CSSQueryManglerTranspiler;
 class CSSMinificationManglerTranspiler extends DrivenManglerTranspiler {
+    options;
+    constructor(options) {
+        super();
+        this.options = options;
+    }
     createContext() {
         return undefined;
     }
@@ -70,7 +75,9 @@ class CSSMinificationManglerTranspiler extends DrivenManglerTranspiler {
         if (asset.syntaxType != mangler_asset_1.ManglerAssetType.STYLE) {
             return asset.syntaxText;
         }
-        return this.transformRGB(asset.syntaxText);
+        const t1 = this.options.rgbToHex ? this.transformRGB(asset.syntaxText) : asset.syntaxText;
+        const t2 = this.options.comments ? this.transformComments(asset.syntaxText) : t1;
+        return t2;
     }
     transformRGB(syntaxText) {
         const regexpInst = /rgba?\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*(,\s*[0-1]+(\.\d+)?\s*)?\)/g;
@@ -90,6 +97,21 @@ class CSSMinificationManglerTranspiler extends DrivenManglerTranspiler {
             const index = global.index + replacedLength;
             const length = global[0].length;
             const result = string_1.StringUtil.replaceRange(syntaxText, index, index + length, rgbHexStr);
+            replacedLength += string_1.StringUtil.replacedLength(syntaxText, result);
+            syntaxText = result;
+        }
+        return syntaxText;
+    }
+    transformComments(syntaxText) {
+        const regexpInst = /\n?\/\*[^]+?\*\//g;
+        const regexpList = syntaxText.matchAll(regexpInst);
+        let replacedLength = 0;
+        for (const global of regexpList) {
+            const inner = global[0];
+            const index = global.index + replacedLength;
+            const length = inner.length;
+            const result = string_1.StringUtil.replaceRange(syntaxText, index, index + length, "" // to empty string.
+            );
             replacedLength += string_1.StringUtil.replacedLength(syntaxText, result);
             syntaxText = result;
         }

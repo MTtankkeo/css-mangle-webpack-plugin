@@ -79,7 +79,16 @@ export class CSSQueryManglerTranspiler extends DrivenManglerTranspiler<CSSQueryM
     }
 }
 
+export interface CSSMinificationManglerOptions {
+    rgbToHex: boolean;
+    comments: boolean;
+}
+
 export class CSSMinificationManglerTranspiler extends DrivenManglerTranspiler<undefined> {
+    constructor(public options: CSSMinificationManglerOptions) {
+        super();
+    }
+
     createContext(): ManglerContext<undefined> {
         return undefined;
     }
@@ -89,7 +98,9 @@ export class CSSMinificationManglerTranspiler extends DrivenManglerTranspiler<un
             return asset.syntaxText;
         }
 
-        return this.transformRGB(asset.syntaxText);
+        const t1 = this.options.rgbToHex ? this.transformRGB(asset.syntaxText) : asset.syntaxText;
+        const t2 = this.options.comments ? this.transformComments(asset.syntaxText) : t1;
+        return t2;
     }
 
     transformRGB(syntaxText: string): string {
@@ -118,6 +129,30 @@ export class CSSMinificationManglerTranspiler extends DrivenManglerTranspiler<un
                 index,
                 index + length,
                 rgbHexStr
+            );
+
+            replacedLength += StringUtil.replacedLength(syntaxText, result);
+            syntaxText = result;
+        }
+
+        return syntaxText;
+    }
+
+    transformComments(syntaxText: string): string {
+        const regexpInst = /\n?\/\*[^]+?\*\//g;
+        const regexpList = syntaxText.matchAll(regexpInst);
+
+        let replacedLength = 0;
+
+        for (const global of regexpList) {
+            const inner = global[0];
+            const index = global.index + replacedLength;
+            const length = inner.length;
+            const result = StringUtil.replaceRange(
+                syntaxText,
+                index,
+                index + length,
+                "" // to empty string.
             );
 
             replacedLength += StringUtil.replacedLength(syntaxText, result);
