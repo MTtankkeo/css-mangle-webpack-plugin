@@ -117,8 +117,15 @@ class CSSQueryReference extends ManglerReference {
     /** TODO: It should be considered about dereference for variables. */
     transformScript(sources, context) {
         const parser = new mangler_backrefer_1.ManglerBackrefer(sources);
-        parser.setPropertyByName("className", (oldName) => context.parent.classMangler.transform(oldName));
-        parser.setPropertyByName("id", (oldName) => context.parent.idMangler.transform(oldName));
+        const getIdentifier = (prefix, mangler, value) => {
+            const identifiers = [];
+            value.split(" ").forEach(name => {
+                identifiers.push(mangler.cache.get(prefix + name).identifierName);
+            });
+            return identifiers.filter(Boolean).join(" ");
+        };
+        parser.setPropertyByName("className", (oldName) => getIdentifier(".", context.parent.classMangler, oldName));
+        parser.setPropertyByName("id", (oldName) => getIdentifier("#", context.parent.idMangler, oldName));
         return parser.code;
     }
 }

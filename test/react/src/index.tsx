@@ -5,7 +5,7 @@ import "./index.css";
 
 function Root() {
     return (
-        <div id="hello-world1" className="hello-world2">hello world</div>
+        <div id="hello-world1" className="hello-world2 hello-world1">hello world</div>
     )
 }
 

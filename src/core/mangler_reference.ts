@@ -166,8 +166,18 @@ export class CSSQueryReference extends ManglerReference<CSSQueryManglerContext> 
         context: ManglerContext<CSSQueryManglerContext>
     ): string { // for JSX
         const parser = new ManglerBackrefer(sources);
-        parser.setPropertyByName("className", (oldName) => context.parent.classMangler.transform(oldName));
-        parser.setPropertyByName("id", (oldName) => context.parent.idMangler.transform(oldName));
+        const getIdentifier = (prefix: string, mangler: Mangler, value: string) => {
+            const identifiers = [];
+
+            value.split(" ").forEach(name => {
+                identifiers.push(mangler.cache.get(prefix + name).identifierName);
+            });
+
+            return identifiers.filter(Boolean).join(" ");
+        }
+
+        parser.setPropertyByName("className", (oldName) => getIdentifier(".", context.parent.classMangler, oldName));
+        parser.setPropertyByName("id", (oldName) => getIdentifier("#", context.parent.idMangler, oldName));
 
         return parser.code;
     }

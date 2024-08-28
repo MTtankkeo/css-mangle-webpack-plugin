@@ -43,7 +43,7 @@ export class CSSVariableManglerTranspiler extends DrivenManglerTranspiler {
     }
 
     transform(asset: ManglerAsset): string {
-        const context = this.context ?? this.createContext();
+        const context = this.context ??= this.createContext();
         const t1 = this.createManglerDeclaration().transform(asset, context);
         const t2 = this.createManglerReference().transform(((asset.syntaxText = t1), asset), context);
         return t2;
@@ -72,7 +72,7 @@ export class CSSQueryManglerTranspiler extends DrivenManglerTranspiler<CSSQueryM
     }
 
     transform(asset: ManglerAsset): string {
-        const context = this.context ?? this.createContext();
+        const context = this.context ??= this.createContext();
         const t1 = this.createManglerDeclaration().transform(asset, context);
         const t2 = this.createManglerReference().transform(((asset.syntaxText = t1), asset), context);
         return t2;

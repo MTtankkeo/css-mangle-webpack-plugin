@@ -109,9 +109,10 @@ export class CSSQueryDeclaration extends ManglerDeclaration<CSSQueryManglerConte
             for (const local of estimatedQuerys) {
                 const oldName = local[0];
                 const isClass = /^\./.test(oldName);
-                const manglers = context.parent;
-                const mangler = isClass ? manglers.classMangler : manglers.idMangler;
-                const newName = mangler.transform(oldName);
+                const mangler = isClass ? context.parent.classMangler : context.parent.idMangler;
+                const newName = isClass
+                    ? mangler.transform(oldName)
+                    : mangler.transform(oldName);
                 const length = oldName.length;
                 const prefix = isClass ? "." : "#";
                 const index = (global.index + local.index) + replacedLength;
@@ -127,6 +128,8 @@ export class CSSQueryDeclaration extends ManglerDeclaration<CSSQueryManglerConte
                 syntaxText = result;
             }
         }
+
+        console.log(context.parent);
 
         return syntaxText;
     }
