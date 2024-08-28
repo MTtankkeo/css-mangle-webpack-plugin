@@ -1,6 +1,7 @@
 import { StringUtil } from "../utils/string";
 import { Mangler } from "./mangler";
 import { ManglerAsset, ManglerAssetType } from "./mangler_asset";
+import { ManglerBackrefer } from "./mangler_backrefer";
 import { ManglerContext } from "./mangler_context";
 import { CSSQueryManglerContext, CSSVariableManglerOptions } from "./mangler_transpiler";
 import * as recast from "recast";
@@ -165,25 +166,20 @@ export class CSSQueryReference extends ManglerReference<CSSQueryManglerContext> 
         context: ManglerContext<CSSQueryManglerContext>
     ): string { // for JSX
         const source = `
-            const value1 = "background";
-            const value2 = {className: value1}
-            const value3 = {className: "hello, world!"}
+            const func = (a) => {
+                const value2 = {className: a}
+                const value3 = {className: "hello, world!"}
+            }
+
+            func("Hello, World!");
         `;
 
-        const AST = recast.parse(source);
+        const parser = new ManglerBackrefer(source);
+        parser.setPropertyByName("className", (oldName) => {
+            return `${oldName} 변경 됨`; context.parent.classMangler.transform(oldName);
+        });
 
-        recast.visit(AST, {
-            visitProperty(path) {
-                const kName: string = path.node.key["name"];
-                const value = path.node.value;
-
-                if (kName == "className") { // "className" of object property.
-                    console.log(value);
-                }
-
-                return false;
-            }
-        })
+        console.log(parser.code);
 
         return syntaxText;
     }

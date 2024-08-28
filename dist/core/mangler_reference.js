@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CSSQueryReference = exports.CSSVariableReference = exports.ManglerReference = void 0;
 const string_1 = require("../utils/string");
 const mangler_asset_1 = require("./mangler_asset");
-const recast = require("recast");
+const mangler_backrefer_1 = require("./mangler_backrefer");
 class ManglerReference {
 }
 exports.ManglerReference = ManglerReference;
@@ -117,21 +117,19 @@ class CSSQueryReference extends ManglerReference {
     /** TODO: It should be considered about dereference for variables. */
     transformScript(syntaxText, context) {
         const source = `
-            const value1 = "background";
-            const value2 = {className: value1}
-            const value3 = {className: "hello, world!"}
-        `;
-        const AST = recast.parse(source);
-        recast.visit(AST, {
-            visitProperty(path) {
-                const kName = path.node.key["name"];
-                const value = path.node.value;
-                if (kName == "className") { // "className" of object property.
-                    console.log(value);
-                }
-                return false;
+            const func = (a) => {
+                const value2 = {className: a}
+                const value3 = {className: "hello, world!"}
             }
+
+            func("Hello, World!");
+        `;
+        const parser = new mangler_backrefer_1.ManglerBackrefer(source);
+        parser.setPropertyByName("className", (oldName) => {
+            return `${oldName} 변경 됨`;
+            context.parent.classMangler.transform(oldName);
         });
+        console.log(parser.code);
         return syntaxText;
     }
 }
