@@ -165,7 +165,7 @@ export class CSSMinificationManglerTranspiler extends DrivenManglerTranspiler<un
     }
 
     transformEscapeSequence(syntaxText: string): string {
-        const ignoreRegexpInst = /".+?"|'.+?'|\/\*.+?\*\/|@[\w]+[\s\n]+/g; // Refer to safe-area.
+        const ignoreRegexpInst = /".+?"|'.+?'|\/\*.+?\*\/|@[\w]+[\s\n]+|(?<=\w+\s*:\s*)\S.+?(?=[;}])/g; // Refer to safe-area.
         const ignoreRegexpList = syntaxText.matchAll(ignoreRegexpInst);
         const ignoreRanges: {start: number, end: number}[] = [];
 
@@ -177,7 +177,7 @@ export class CSSMinificationManglerTranspiler extends DrivenManglerTranspiler<un
         const regexpList = syntaxText.matchAll(regexpInst);
 
         let replacedLength = 0;
-        
+
         for (const global of regexpList) {
             const inner = global[0];
             const index = global.index + replacedLength;
@@ -194,8 +194,6 @@ export class CSSMinificationManglerTranspiler extends DrivenManglerTranspiler<un
 
                 replacedLength += StringUtil.replacedLength(syntaxText, result);
                 syntaxText = result;
-            } else {
-                console.log(syntaxText.substring(index - 5, index + 5));
             }
         }
 

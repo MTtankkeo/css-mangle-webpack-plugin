@@ -7,7 +7,9 @@
 }
 
 .hello[a="hello world!"] {
-
+    background-color: var(--background);
+    border: 1px solid var(--rearground);
+    border-radius: 15px;
 }
 
 @property --foreground {}

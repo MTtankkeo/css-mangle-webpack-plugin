@@ -128,7 +128,7 @@
             return syntaxText;
         }
         transformEscapeSequence(syntaxText) {
-            const ignoreRegexpInst = /".+?"|'.+?'|\/\*.+?\*\/|@[\w]+[\s\n]+/g; // Refer to safe-area.
+            const ignoreRegexpInst = /".+?"|'.+?'|\/\*.+?\*\/|@[\w]+[\s\n]+|(?<=\w+\s*:\s*)\S.+?(?=[;}])/g; // Refer to safe-area.
             const ignoreRegexpList = syntaxText.matchAll(ignoreRegexpInst);
             const ignoreRanges = [];
             for (const global of ignoreRegexpList) {
@@ -148,9 +148,6 @@
                     );
                     replacedLength += string_1.StringUtil.replacedLength(syntaxText, result);
                     syntaxText = result;
-                }
-                else {
-                    console.log(syntaxText.substring(index - 5, index + 5));
                 }
             }
             return syntaxText;
