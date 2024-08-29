@@ -38,6 +38,7 @@ export declare class CSSQueryManglerTranspiler extends DrivenManglerTranspiler<C
 export interface CSSMinificationManglerOptions {
     rgbToHex: boolean;
     comments: boolean;
+    escapeSequence: boolean;
 }
 export declare class CSSMinificationManglerTranspiler extends DrivenManglerTranspiler<undefined> {
     options: CSSMinificationManglerOptions;

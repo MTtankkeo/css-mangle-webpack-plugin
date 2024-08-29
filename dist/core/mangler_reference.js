@@ -125,17 +125,7 @@
         }
         /** TODO: It should be considered about dereference for variables. */
         transformScript(sources, context) {
-            const parser = new mangler_script_1.ManglerScript(`
-            const func1 = (arg1) => {
-                _jsx("div", {className: arg1});
-            };
-
-            const func2 = (count) => {
-                const a = "Hello, World is 1";
-                const b = "Hello, World is 2";
-                func(count == 0 ? a : b);
-            }
-        `);
+            const parser = new mangler_script_1.ManglerScript(sources);
             const getIdentifier = (prefix, mangler, value) => {
                 const identifiers = [];
                 value.split(" ").forEach(name => {

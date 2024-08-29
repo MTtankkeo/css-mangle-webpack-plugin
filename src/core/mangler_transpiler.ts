@@ -82,7 +82,7 @@ export class CSSQueryManglerTranspiler extends DrivenManglerTranspiler<CSSQueryM
 export interface CSSMinificationManglerOptions {
     rgbToHex: boolean;
     comments: boolean;
-    // escapeSequence: boolean;
+    escapeSequence: boolean;
 }
 
 export class CSSMinificationManglerTranspiler extends DrivenManglerTranspiler<undefined> {
@@ -101,8 +101,8 @@ export class CSSMinificationManglerTranspiler extends DrivenManglerTranspiler<un
 
         const t1 = this.options.rgbToHex ? this.transformRGB(asset.syntaxText) : asset.syntaxText;
         const t2 = this.options.comments ? this.transformComments(t1) : t1;
-        // const t3 = this.options.escapeSequence ? this.transformEscapeSequence(t2) : t2;
-        return t2;
+        const t3 = this.options.escapeSequence ? this.transformEscapeSequence(t2) : t2;
+        return t3;
     }
 
     transformRGB(syntaxText: string): string {
@@ -165,7 +165,7 @@ export class CSSMinificationManglerTranspiler extends DrivenManglerTranspiler<un
     }
 
     transformEscapeSequence(syntaxText: string): string {
-        const ignoreRegexpInst = /".+?"|'.+?'|\/\*.+?\*\//g; // Refer to safe-area.
+        const ignoreRegexpInst = /".+?"|'.+?'|\/\*.+?\*\/|@[\w]+[\s\n]+/g; // Refer to safe-area.
         const ignoreRegexpList = syntaxText.matchAll(ignoreRegexpInst);
         const ignoreRanges: {start: number, end: number}[] = [];
 
@@ -182,7 +182,7 @@ export class CSSMinificationManglerTranspiler extends DrivenManglerTranspiler<un
             const inner = global[0];
             const index = global.index + replacedLength;
             const length = inner.length;
-            const inRange = ignoreRanges.find(r => r.start <= index && r.end >= index);
+            const inRange = ignoreRanges.find(r => r.start <= global.index && r.end >= global.index);
             const isIgnore = inRange != null;
             if (!isIgnore) {
                 const result = StringUtil.replaceRange(
@@ -194,6 +194,8 @@ export class CSSMinificationManglerTranspiler extends DrivenManglerTranspiler<un
 
                 replacedLength += StringUtil.replacedLength(syntaxText, result);
                 syntaxText = result;
+            } else {
+                console.log(syntaxText.substring(index - 5, index + 5));
             }
         }
 

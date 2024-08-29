@@ -165,17 +165,7 @@ export class CSSQueryReference extends ManglerReference<CSSQueryManglerContext> 
         sources: string,
         context: ManglerContext<CSSQueryManglerContext>
     ): string { // for JSX
-        const parser = new ManglerScript(`
-            const func1 = (arg1) => {
-                _jsx("div", {className: arg1});
-            };
-
-            const func2 = (count) => {
-                const a = "Hello, World is 1";
-                const b = "Hello, World is 2";
-                func(count == 0 ? a : b);
-            }
-        `);
+        const parser = new ManglerScript(sources);
         const getIdentifier = (prefix: string, mangler: Mangler, value: string) => {
             const identifiers = [];
 

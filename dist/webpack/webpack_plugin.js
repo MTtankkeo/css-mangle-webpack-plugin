@@ -23,7 +23,7 @@
                 this.transpilers.push(new mangler_transpiler_1.CSSMinificationManglerTranspiler({
                     rgbToHex: minifyOptions?.rgbToHex ?? true,
                     comments: minifyOptions?.comments ?? true,
-                    // escapeSequence: minifyOptions?.escapeSequence ?? true
+                    escapeSequence: minifyOptions?.escapeSequence ?? true
                 }));
             }
             // When is not active to compress about the identifiers of CSS.
@@ -81,7 +81,6 @@
                                     syntaxText: source,
                                     syntaxType: mangler_1.ManglerUtil.assetTypeOf(assetName)
                                 });
-                                ;
                                 compilation.updateAsset(assetName, new compiler.webpack.sources.RawSource(result));
                             }
                             if (debugLogs == "ALL" || debugLogs == "TIMEOUT") {

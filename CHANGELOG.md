@@ -25,3 +25,7 @@
 # 1.0.0-alpha10 ~ 11
 - Updated about minify into options property.
 - Fixed to share related [ManglerContext] instances with each other in the compilation assets files.
+
+# 1.0.0-alpha12
+- Added removing escape-sequence optional feature into about minify options.
+- Fixed the way of export default about Typescirpt.

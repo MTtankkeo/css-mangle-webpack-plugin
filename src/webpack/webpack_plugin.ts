@@ -43,7 +43,7 @@ export class CSSMangleWebpackPlugin {
             this.transpilers.push(new CSSMinificationManglerTranspiler({
                 rgbToHex: minifyOptions?.rgbToHex ?? true,
                 comments: minifyOptions?.comments ?? true,
-                // escapeSequence: minifyOptions?.escapeSequence ?? true
+                escapeSequence: minifyOptions?.escapeSequence ?? true
             }));
         }
 
@@ -113,7 +113,7 @@ export class CSSMangleWebpackPlugin {
                                     syntaxText: source,
                                     syntaxType: ManglerUtil.assetTypeOf(assetName)
                                 });
-;
+
                                 compilation.updateAsset(
                                     assetName,
                                     new compiler.webpack.sources.RawSource(result)
