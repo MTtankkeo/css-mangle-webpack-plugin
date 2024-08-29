@@ -11,7 +11,7 @@
     </table>
 </div>
 
-# Description
+# Introduction
 This webpack plugin package is a CSS mangler that globally optimizes and shortens identifier names.
 
 > in brief, It primarily converts identifiers used in CSS (e.g., variables, class names, IDs) into shorter names to reduce file size and improve performance. 🚀
