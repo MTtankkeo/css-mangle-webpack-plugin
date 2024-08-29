@@ -1,25 +1,35 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.StringUtil = void 0;
-/** This class provides additional functionality for `String` value type. */
-class StringUtil {
-    /**
-     * Replaces a given range(start, end) with the given string value,
-     * and returns it.
-     */
-    static replaceRange(str, start, end, replaceValue) {
-        return str.substring(0, start) + replaceValue + str.substring(end);
+(function (factory) {
+    if (typeof module === "object" && typeof module.exports === "object") {
+        var v = factory(require, exports);
+        if (v !== undefined) module.exports = v;
     }
-    /**
-     * Returns the length difference between a given old string
-     * and a given new string.
-     */
-    static replacedLength(oldStr, newStr) {
-        return newStr.length - oldStr.length;
+    else if (typeof define === "function" && define.amd) {
+        define(["require", "exports"], factory);
     }
-    /** Returns the bytes size of a given string value. */
-    static BytesOf(str) {
-        return new TextEncoder().encode(str).length;
+})(function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.StringUtil = void 0;
+    /** This class provides additional functionality for `String` value type. */
+    class StringUtil {
+        /**
+         * Replaces a given range(start, end) with the given string value,
+         * and returns it.
+         */
+        static replaceRange(str, start, end, replaceValue) {
+            return str.substring(0, start) + replaceValue + str.substring(end);
+        }
+        /**
+         * Returns the length difference between a given old string
+         * and a given new string.
+         */
+        static replacedLength(oldStr, newStr) {
+            return newStr.length - oldStr.length;
+        }
+        /** Returns the bytes size of a given string value. */
+        static BytesOf(str) {
+            return new TextEncoder().encode(str).length;
+        }
     }
-}
-exports.StringUtil = StringUtil;
+    exports.StringUtil = StringUtil;
+});

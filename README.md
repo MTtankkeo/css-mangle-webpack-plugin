@@ -40,7 +40,7 @@ npm install css-mangle-webpack-plugin --save-dev
 ## And then In webpack.config.js
 ```cjs
 // In webpack.config.js
-const CSSManglePlugin = require("css-mangle-webpack-plugin").default;
+const CSSManglePlugin = require("css-mangle-webpack-plugin");
 
 module.exports = {
   // Add an instance of CSSManglePlugin to plugins property value.

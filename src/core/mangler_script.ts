@@ -1,7 +1,8 @@
 import { ManglerRenameBuilder } from "../types";
+import { NodePath } from "ast-types/lib/node-path";
 import * as recast from "recast";
 
-export class ManglerBackrefer {
+export class ManglerScript {
     ast: any;
 
     constructor(public source: string) {
@@ -10,7 +11,7 @@ export class ManglerBackrefer {
 
     setPropertyByName(name: string, builder: ManglerRenameBuilder) {
         recast.visit(this.ast, {
-            visitProperty(path) {
+            visitProperty: (path) => {
                 const kName: string = path.node.key["name"];
                 const value = path.node.value;
 
@@ -20,8 +21,14 @@ export class ManglerBackrefer {
 
                 return false;
             }
-        })
+        });
     }
+
+    /*
+    setPropertyLiteralByNode(path: NodePath<recast.types.ASTNode>) {
+        console.log(path.value);
+    }
+    */
 
     get code(): string {
         return recast.print(this.ast).code;

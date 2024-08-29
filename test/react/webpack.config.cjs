@@ -1,4 +1,4 @@
-const CSSMangleWebpackPlugin = require("css-mangle-webpack-plugin").default;
+const CSSMangleWebpackPlugin = require("css-mangle-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HTMLWebpackPlugin = require("html-webpack-plugin");
 

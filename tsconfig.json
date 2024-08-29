@@ -1,8 +1,8 @@
 {
     "compilerOptions": {
         "lib": ["ES2023", "ES2023.Collection", "DOM"],
-        "module": "CommonJS",
-        "target": "ES2022",
+        "module": "UMD",
+        "target": "ESNext",
         "outDir": "./dist/",
         "moduleResolution": "Node",
         "skipLibCheck": true,

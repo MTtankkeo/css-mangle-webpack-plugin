@@ -1,7 +1,7 @@
 import { StringUtil } from "../utils/string";
 import { Mangler } from "./mangler";
 import { ManglerAsset, ManglerAssetType } from "./mangler_asset";
-import { ManglerBackrefer } from "./mangler_backrefer";
+import { ManglerScript } from "./mangler_script";
 import { ManglerContext } from "./mangler_context";
 import { CSSQueryManglerContext, CSSVariableManglerOptions } from "./mangler_transpiler";
 import * as recast from "recast";
@@ -165,7 +165,17 @@ export class CSSQueryReference extends ManglerReference<CSSQueryManglerContext> 
         sources: string,
         context: ManglerContext<CSSQueryManglerContext>
     ): string { // for JSX
-        const parser = new ManglerBackrefer(sources);
+        const parser = new ManglerScript(`
+            const func1 = (arg1) => {
+                _jsx("div", {className: arg1});
+            };
+
+            const func2 = (count) => {
+                const a = "Hello, World is 1";
+                const b = "Hello, World is 2";
+                func(count == 0 ? a : b);
+            }
+        `);
         const getIdentifier = (prefix: string, mangler: Mangler, value: string) => {
             const identifiers = [];
 

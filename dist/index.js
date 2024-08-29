@@ -1,15 +1,13 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ManglerTranspiler = exports.CSSVariableReference = exports.ManglerReference = exports.CSSVariableDeclaration = exports.ManglerDeclaration = exports.Mangler = void 0;
-const webpack_plugin_1 = require("./webpack/webpack_plugin");
-var mangler_1 = require("./core/mangler");
-Object.defineProperty(exports, "Mangler", { enumerable: true, get: function () { return mangler_1.Mangler; } });
-var mangler_declaration_1 = require("./core/mangler_declaration");
-Object.defineProperty(exports, "ManglerDeclaration", { enumerable: true, get: function () { return mangler_declaration_1.ManglerDeclaration; } });
-Object.defineProperty(exports, "CSSVariableDeclaration", { enumerable: true, get: function () { return mangler_declaration_1.CSSVariableDeclaration; } });
-var mangler_reference_1 = require("./core/mangler_reference");
-Object.defineProperty(exports, "ManglerReference", { enumerable: true, get: function () { return mangler_reference_1.ManglerReference; } });
-Object.defineProperty(exports, "CSSVariableReference", { enumerable: true, get: function () { return mangler_reference_1.CSSVariableReference; } });
-var mangler_transpiler_1 = require("./core/mangler_transpiler");
-Object.defineProperty(exports, "ManglerTranspiler", { enumerable: true, get: function () { return mangler_transpiler_1.ManglerTranspiler; } });
-exports.default = webpack_plugin_1.CSSMangleWebpackPlugin;
+(function (factory) {
+    if (typeof module === "object" && typeof module.exports === "object") {
+        var v = factory(require, exports);
+        if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === "function" && define.amd) {
+        define(["require", "exports", "./webpack/webpack_plugin"], factory);
+    }
+})(function (require, exports) {
+    "use strict";
+    const webpack_plugin_1 = require("./webpack/webpack_plugin");
+    return webpack_plugin_1.CSSMangleWebpackPlugin;
+});
