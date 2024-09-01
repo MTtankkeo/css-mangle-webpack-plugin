@@ -86,7 +86,9 @@
         transform(asset, context) {
             const t1 = this.transformHTML(asset.syntaxText, context);
             if (asset.syntaxType == mangler_asset_1.ManglerAssetType.SCRIPT) {
-                return this.transformScript(t1, context);
+                const t2 = this.transformScript(t1, context);
+                const t3 = this.transformLiteral(t2, context);
+                return t3;
             }
             else {
                 return t1;
@@ -133,9 +135,41 @@
                 });
                 return identifiers.filter(Boolean).join(" ");
             };
-            parser.setPropertyByName("className", (oldName) => getIdentifier(".", context.parent.classMangler, oldName));
-            parser.setPropertyByName("id", (oldName) => getIdentifier("#", context.parent.idMangler, oldName));
+            const classNameBuilder = (oldName) => {
+                return getIdentifier(".", context.parent.classMangler, oldName);
+            };
+            const idNameBuilder = (oldName) => {
+                return getIdentifier("#", context.parent.idMangler, oldName);
+            };
+            parser.setPropertyByName("className", classNameBuilder);
+            parser.setPropertyByName("id", idNameBuilder);
             return parser.code;
+        }
+        /** TODO: About document.querySelector, document.querySelectorAll */
+        transformLiteral(syntaxText, context) {
+            const iRegexpInst = /(?<=\w.(getElementById)\(")\s*[\w-]+?\s*(?=\")/g;
+            const cRegexpInst = /(?<=\w.(getElementsByClassName)\(")\s*[\w-]+?\s*(?=\")/g;
+            const iRegexpList = Array.from(syntaxText.matchAll(iRegexpInst));
+            const cRegexpList = Array.from(syntaxText.matchAll(cRegexpInst));
+            const objectList = [
+                ...iRegexpList.map(r => { return { type: "id", instance: r }; }),
+                ...cRegexpList.map(r => { return { type: "class", instance: r }; }),
+            ];
+            let replacedLength = 0;
+            for (const object of objectList) {
+                const global = object.instance;
+                const index = global.index + replacedLength;
+                const oldName = global[0];
+                const newName = object.type == "id"
+                    ? context.parent.idMangler.CSSPropertyOf(oldName, "#")
+                    : context.parent.classMangler.CSSPropertyOf(oldName, ".");
+                if (newName) {
+                    const result = string_1.StringUtil.replaceRange(syntaxText, index, index + oldName.length, newName.replace("#", "").replace(".", ""));
+                    replacedLength += string_1.StringUtil.replacedLength(syntaxText, result);
+                    syntaxText = result;
+                }
+            }
+            return syntaxText;
         }
     }
     exports.CSSQueryReference = CSSQueryReference;

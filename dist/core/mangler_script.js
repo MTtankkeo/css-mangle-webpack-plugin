@@ -20,7 +20,7 @@
         }
         setPropertyByName(name, builder) {
             recast.visit(this.ast, {
-                visitProperty: (path) => {
+                visitProperty(path) {
                     const kName = path.node.key["name"];
                     const value = path.node.value;
                     if (kName == name && value.type == "Literal") { // a given name of object property.
@@ -30,11 +30,6 @@
                 }
             });
         }
-        /*
-        setPropertyLiteralByNode(path: NodePath<recast.types.ASTNode>) {
-            console.log(path.value);
-        }
-        */
         get code() {
             return recast.print(this.ast).code;
         }

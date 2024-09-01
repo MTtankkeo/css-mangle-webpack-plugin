@@ -11,8 +11,8 @@ export class ManglerScript {
 
     setPropertyByName(name: string, builder: ManglerRenameBuilder) {
         recast.visit(this.ast, {
-            visitProperty: (path) => {
-                const kName: string = path.node.key["name"];
+            visitProperty(path) {
+                const kName = path.node.key["name"];
                 const value = path.node.value;
 
                 if (kName == name && value.type == "Literal") { // a given name of object property.
@@ -23,12 +23,6 @@ export class ManglerScript {
             }
         });
     }
-
-    /*
-    setPropertyLiteralByNode(path: NodePath<recast.types.ASTNode>) {
-        console.log(path.value);
-    }
-    */
 
     get code(): string {
         return recast.print(this.ast).code;
