@@ -4,7 +4,6 @@ import { ManglerAsset, ManglerAssetType } from "./mangler_asset";
 import { ManglerScript } from "./mangler_script";
 import { ManglerContext } from "./mangler_context";
 import { CSSQueryManglerContext, CSSVariableManglerOptions } from "./mangler_transpiler";
-import * as recast from "recast";
 
 export abstract class ManglerReference<T = Mangler> {
     abstract transform(asset: ManglerAsset, context: ManglerContext<T>): string;
@@ -107,8 +106,9 @@ export class CSSQueryReference extends ManglerReference<CSSQueryManglerContext> 
 
         if (asset.syntaxType == ManglerAssetType.SCRIPT) {
             const t2 = this.transformScript(t1, context);
-            const t3 = this.transformLiteral(t2, context);
-            return t3;
+            const t3 = this.transformSingleQuery(t2, context);
+            const t4 = this.transformMultplQuery(t3, context);
+            return t4;
         } else {
             return t1;
         }
@@ -144,12 +144,12 @@ export class CSSQueryReference extends ManglerReference<CSSQueryManglerContext> 
                 const oldName = propertyValue[0];
                 const newName = property.mangler.CSSPropertyOf(oldName, property.prefix);
                 const length = oldName.length;
-                const index = propertyIndex + propertyValue.index + replacedLength;
+                const gIndex = propertyIndex + propertyValue.index + replacedLength;
                 if (newName) {
                     const result = StringUtil.replaceRange(
                         syntaxText,
-                        index,
-                        index + length,
+                        gIndex,
+                        gIndex + length,
                         newName.replace(property.prefix, "")
                     );
 
@@ -171,6 +171,7 @@ export class CSSQueryReference extends ManglerReference<CSSQueryManglerContext> 
         const getIdentifier = (prefix: string, mangler: Mangler, value: string) => {
             const identifiers = [];
 
+            // Splitting given identifier values by "\s"
             value.split(" ").forEach(name => {
                 identifiers.push(mangler.cache.get(prefix + name).identifierName);
             });
@@ -192,10 +193,9 @@ export class CSSQueryReference extends ManglerReference<CSSQueryManglerContext> 
         return parser.code;
     }
 
-    /** TODO: About document.querySelector, document.querySelectorAll */
-    transformLiteral(syntaxText: string, context: ManglerContext<CSSQueryManglerContext>): string {
-        const iRegexpInst = /(?<=\w.(getElementById)\(")\s*[\w-]+?\s*(?=\")/g;
-        const cRegexpInst = /(?<=\w.(getElementsByClassName)\(")\s*[\w-]+?\s*(?=\")/g;
+    transformSingleQuery(syntaxText: string, context: ManglerContext<CSSQueryManglerContext>): string {
+        const iRegexpInst = /(?<=\w.(getElementById)\(["'])\s*[\w-]+?\s*(?=["'])/g;
+        const cRegexpInst = /(?<=\w.(getElementsByClassName)\(["'])\s*[\w-]+?\s*(?=["'])/g;
         const iRegexpList = Array.from(syntaxText.matchAll(iRegexpInst));
         const cRegexpList = Array.from(syntaxText.matchAll(cRegexpInst));
         const objectList = [
@@ -207,22 +207,64 @@ export class CSSQueryReference extends ManglerReference<CSSQueryManglerContext> 
 
         for (const object of objectList) {
             const global = object.instance;
-            const index = global.index + replacedLength;
+            const gIndex = global.index + replacedLength;
+            const length = global[0].length;
             const oldName = global[0];
             const newName = object.type == "id"
                 ? context.parent.idMangler.CSSPropertyOf(oldName, "#")
-                : context.parent.classMangler.CSSPropertyOf(oldName, ".")
+                : context.parent.classMangler.CSSPropertyOf(oldName, ".");
 
             if (newName) {
                 const result = StringUtil.replaceRange(
                     syntaxText,
-                    index,
-                    index + oldName.length,
+                    gIndex,
+                    gIndex + length,
                     newName.replace("#", "").replace(".", "")
                 );
 
                 replacedLength += StringUtil.replacedLength(syntaxText, result);
                 syntaxText = result;
+            }
+        }
+
+        return syntaxText;
+    }
+
+    transformMultplQuery(syntaxText: string, context: ManglerContext<CSSQueryManglerContext>): string {
+        const regexpInst = /(?<=\w.querySelector(All)?\(["'])[^]+?(?=["'])/g;
+        const regexpList = syntaxText.matchAll(regexpInst);
+
+        let replacedLength = 0;
+
+        for (const global of regexpList) {
+            const gIndex = global.index;
+            const localId = Array.from(global[0].matchAll(/(?<=\#)[\w-]+/g)); // id
+            const localCl = Array.from(global[0].matchAll(/(?<=\.)[\w-]+/g)); // class
+            const objects = [
+                ...localId.map(r => {return {type: "id", instance: r}}),
+                ...localCl.map(r => {return {type: "class", instance: r}}),
+            ];
+
+            for (const object of objects) {
+                const localI = object.instance;
+                const lIndex = (gIndex + localI.index);
+                const length = localI[0].length;
+                const oldName = localI[0];
+                const newName = object.type == "id"
+                    ? context.parent.idMangler.CSSPropertyOf(oldName, "#")
+                    : context.parent.classMangler.CSSPropertyOf(oldName, ".");
+
+                if (newName) {
+                    const result = StringUtil.replaceRange(
+                        syntaxText,
+                        lIndex,
+                        lIndex + length,
+                        newName.replace("#", "").replace(".", "")
+                    );
+
+                    replacedLength += StringUtil.replacedLength(syntaxText, result);
+                    syntaxText = result;
+                }
             }
         }
 
