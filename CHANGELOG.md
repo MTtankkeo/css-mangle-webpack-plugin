@@ -29,3 +29,7 @@
 # 1.0.0-alpha13
 - Added removing escape-sequence optional feature into about minify options.
 - Fixed the way of export default about Typescirpt.
+
+# 1.0.0-alpha14 ~ 15
+- Added syntax parsing about standard APIs, e.g. document.getElementById() and document.getElementsByClassName()
+- Added syntax parsing about standard APIs, e.g. document.querySelector() and document.querySelectorAll() 
