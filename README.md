@@ -31,7 +31,7 @@ This webpack plugin package is a CSS mangler that globally optimizes and shorten
 # Install by NPM
 To install this package in your project, enter the following command.
 
-> When you want to update this package, enter npm update css-mangle-webpack-plugin --save in the terminal to run it.
+> When you want to update this package, enter `npm update css-mangle-webpack-plugin --save` in the terminal to run it.
 
 ```
 npm install css-mangle-webpack-plugin --save-dev
