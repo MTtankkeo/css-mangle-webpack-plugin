@@ -36,3 +36,6 @@
 
 # 1.0.0-alpha16
 - Fixed an issue where the `minify` option did not correctly handle CSS syntax such as , and .a .b.
+
+# 1.0.0-alpha17
+- Fixed issues related to high resource consumption, extended processing time, and unstable builds caused by identifying globally common CSS-related syntax patterns. Modified the process to handle different file types separately.
