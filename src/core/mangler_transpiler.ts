@@ -167,6 +167,10 @@ export class CSSMinificationManglerTranspiler extends DrivenManglerTranspiler<un
     transformEscapeSequence(syntaxText: string): string {
         // It matches patterns in CSS that should not be omitted,
         // specifically areas where spaces must not be removed.
+        // 
+        // i.e. The matched contents for this pattern is like safe-area
+        // from removal target for minifying CSS.
+        //
         const ignoreRegexpInst = /".+?"|'.+?'|\/\*.+?\*\/|(?<=\w+\s*:\s*)\S.+?(?=[;}])|[^\s].+?(?=\s*[{,])/g; // Refer to safe-area.
         const ignoreRegexpList = syntaxText.matchAll(ignoreRegexpInst);
         const ignoreRanges: {start: number, end: number}[] = [];
