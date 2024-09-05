@@ -128,7 +128,7 @@
             return syntaxText;
         }
         transformEscapeSequence(syntaxText) {
-            const ignoreRegexpInst = /".+?"|'.+?'|\/\*.+?\*\/|@[\w]+[\s\n]+|(?<=\w+\s*:\s*)\S.+?(?=[;}])/g; // Refer to safe-area.
+            const ignoreRegexpInst = /".+?"|'.+?'|\/\*.+?\*\/|(?<=\w+\s*:\s*)\S.+?(?=[;}])|[^\s].+?(?=\s*[{,])/g; // Refer to safe-area.
             const ignoreRegexpList = syntaxText.matchAll(ignoreRegexpInst);
             const ignoreRanges = [];
             for (const global of ignoreRegexpList) {
@@ -141,7 +141,7 @@
                 const inner = global[0];
                 const index = global.index + replacedLength;
                 const length = inner.length;
-                const inRange = ignoreRanges.find(r => r.start <= global.index && r.end >= global.index);
+                const inRange = ignoreRanges.find(r => r.start < global.index && r.end > global.index);
                 const isIgnore = inRange != null;
                 if (!isIgnore) {
                     const result = string_1.StringUtil.replaceRange(syntaxText, index, index + length, "" // to empty string.

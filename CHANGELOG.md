@@ -32,4 +32,7 @@
 
 # 1.0.0-alpha14 ~ 15
 - Added syntax parsing about standard APIs, e.g. document.getElementById() and document.getElementsByClassName()
-- Added syntax parsing about standard APIs, e.g. document.querySelector() and document.querySelectorAll() 
+- Added syntax parsing about standard APIs, e.g. document.querySelector() and document.querySelectorAll()
+
+# 1.0.0-alpha16
+- Fixed an issue where the `minify` option did not correctly handle CSS syntax such as , and .a .b.
