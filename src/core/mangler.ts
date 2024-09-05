@@ -85,8 +85,12 @@ export class Mangler {
         return this.cache.get(value) || canMangle ? `--${this.transform(value)}` : null;
     }
 
-    CSSPropertyOf(value: string, prefix: string): string {
-        return this.cache.get(value = prefix + value) ? `${prefix}${this.transform(value)}` : null;
+    CSSPropertyOf(value: string, prefix: string, isRaw: boolean = false): string {
+        const transform = () => {
+            return isRaw ? this.transform(value) : `${prefix}${this.transform(value)}`;
+        }
+
+        return this.cache.get(value = prefix + value) ? transform() : null;
     }
 
     /**

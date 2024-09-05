@@ -114,10 +114,7 @@ export class CSSMangleWebpackPlugin {
                                     syntaxType: ManglerUtil.assetTypeOf(assetName)
                                 });
 
-                                compilation.updateAsset(
-                                    assetName,
-                                    new compiler.webpack.sources.RawSource(result)
-                                );
+                                compilation.updateAsset(assetName, new compiler.webpack.sources.RawSource(result));
                             }
 
                             if (debugLogs == "ALL" || debugLogs == "TIMEOUT") {

@@ -1,6 +1,6 @@
 import { StringUtil } from "../utils/string";
 import { Mangler } from "./mangler";
-import { ManglerAsset } from "./mangler_asset";
+import { ManglerAsset, ManglerAssetType } from "./mangler_asset";
 import { ManglerContext } from "./mangler_context";
 import { CSSQueryManglerContext } from "./mangler_transpiler";
 
@@ -35,15 +35,15 @@ export class CSSVariableDeclaration extends ManglerDeclaration {
         let syntaxText = asset.syntaxText;
 
         for (const global of result) {
-            const name = global[0];
             const index = global.index + replacedLength;
             const mangler = context.parent;
-            const identifier = mangler.transform(name);
+            const oldName = global[0];
+            const newName = mangler.transform(oldName);
             const result = StringUtil.replaceRange(
                 syntaxText,
                 index,
-                index + name.length,
-                `--${identifier}`
+                index + oldName.length,
+                `--${newName}`
             );
 
             replacedLength += StringUtil.replacedLength(syntaxText, result);
@@ -55,78 +55,38 @@ export class CSSVariableDeclaration extends ManglerDeclaration {
 }
 
 export class CSSQueryDeclaration extends ManglerDeclaration<CSSQueryManglerContext> {
-    transform(
-        asset: ManglerAsset,
-        context: ManglerContext<CSSQueryManglerContext>
-    ): string {
-        // this syntex is a pseudo-class of CSS.
-        //
-        // If you want details about it,
-        // You can refer to https://developer.mozilla.org/docs/Web/CSS/Attribute_selectors
-        //
-        // Support attribute operators:
-        // - =
-        // - ~=
-        // - |=
-        // - ^=
-        // - $=
-        // - *=
-        //
-        // See Also, A pattern such as .name:function(e) may defined from js.
-        // (e.g. .clz32:function(e) in React)
-        const pesudoClass = /(((:|::)(?!function\b)[\w-]+)?([\(\[][\w-]+([~|^$*]?=((".*?")|('.*?')|\d+)(\s[is])?)?[\)\]])?)?/.source;
+    transform(asset: ManglerAsset, context: ManglerContext<CSSQueryManglerContext>): string {
+        let syntaxText = asset.syntaxText;
+        let syntaxType = asset.syntaxType;
+        if (syntaxType != ManglerAssetType.STYLE) {
+            return syntaxText;
+        }
 
-        // This syntax matches className IdName that is a selector identifier that is like .a and #b
-        const selectorCIPart = /(\.|#)[a-zA-Z0-9_-]+/.source;
-        const selectorCI = `${selectorCIPart}${pesudoClass}`;
+        return this.transformStyle(syntaxText, context);
+    }
 
-        // This syntax matches tag-names that is a selector identifier that is like div, *, .a, #b
-        const selectorIdPart = /([\w-]*(\.|#)?[a-zA-Z0-9_-]+|\*)/.source;
-        const selectorId = `${selectorIdPart}${pesudoClass}`;
-
-        // If you want details about combinators selector of CSS,
-        // You can refer to https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Selectors/Combinators
-        const contextCombinators = /[>+~,]/.source;
-        const contextBehind = `((\\s+?${selectorId})|(\\s*?${contextCombinators}\\s*?${selectorId}))+?`;
-
-        // This patterns matched by the following are:
-        //
-        // .a {}
-        // #a {}
-        // .a #b {}
-        // .a:hover {}
-        // .a:hover #b {}
-        const regexpText = `${selectorCI}(?=\\s*?{|${contextBehind}\\s*?{)`;
-        const regexpList = asset.syntaxText.matchAll(/(\.|\#)\w+[^]*?{/g);
+    transformStyle(syntaxText: string, context: ManglerContext<CSSQueryManglerContext>): string {
+        const syntaxInst = /[.#][\w-]+(?=[^}]+?{[^]*?})/g;
+        const syntaxList = syntaxText.matchAll(syntaxInst);
 
         let replacedLength = 0;
-        let syntaxText = asset.syntaxText;
 
-        for (const global of regexpList) {
-            const estimatedSyntax = global[0]; // wrapped to code block {}.
-            const estimatedQuerys = estimatedSyntax.matchAll(new RegExp(regexpText, "g"));
+        for (const global of syntaxList) {
+            const index = global.index + replacedLength;
+            const oldName = global[0];
+            const newName = oldName.startsWith("#")
+                ? "#" + context.parent.idMangler.transform(oldName)
+                : "." + context.parent.classMangler.transform(oldName);
 
-            for (const local of estimatedQuerys) {
-                const oldName = local[0].match(/(\.|\#)[\w-]+/g)[0];
-                const isClass = /^\./.test(oldName);
-                const mangler = isClass ? context.parent.classMangler : context.parent.idMangler;
-                const newName = isClass
-                    ? mangler.transform(oldName)
-                    : mangler.transform(oldName);
-                const length = oldName.length;
-                const prefix = isClass ? "." : "#";
-                const index = (global.index + local.index) + replacedLength;
+            const result = StringUtil.replaceRange(
+                syntaxText,
+                index,
+                index + oldName.length,
+                newName
+            );
 
-                const result = StringUtil.replaceRange(
-                    syntaxText,
-                    index,
-                    index + length,
-                    prefix + newName
-                );
-
-                replacedLength += StringUtil.replacedLength(syntaxText, result);
-                syntaxText = result;
-            }
+            replacedLength += StringUtil.replacedLength(syntaxText, result);
+            syntaxText = result;
         }
 
         return syntaxText;

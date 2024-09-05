@@ -133,7 +133,7 @@
                 const identifiers = [];
                 // Splitting given identifier values by "\s"
                 value.split(" ").forEach(name => {
-                    identifiers.push(mangler.cache.get(prefix + name).identifierName);
+                    identifiers.push(mangler.CSSPropertyOf(name, prefix, true) ?? name);
                 });
                 return identifiers.filter(Boolean).join(" ");
             };

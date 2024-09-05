@@ -14,4 +14,5 @@ export declare class CSSVariableDeclaration extends ManglerDeclaration {
 }
 export declare class CSSQueryDeclaration extends ManglerDeclaration<CSSQueryManglerContext> {
     transform(asset: ManglerAsset, context: ManglerContext<CSSQueryManglerContext>): string;
+    transformStyle(syntaxText: string, context: ManglerContext<CSSQueryManglerContext>): string;
 }

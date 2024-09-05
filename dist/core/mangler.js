@@ -74,8 +74,11 @@
         CSSVariableOf(value, canMangle = false) {
             return this.cache.get(value) || canMangle ? `--${this.transform(value)}` : null;
         }
-        CSSPropertyOf(value, prefix) {
-            return this.cache.get(value = prefix + value) ? `${prefix}${this.transform(value)}` : null;
+        CSSPropertyOf(value, prefix, isRaw = false) {
+            const transform = () => {
+                return isRaw ? this.transform(value) : `${prefix}${this.transform(value)}`;
+            };
+            return this.cache.get(value = prefix + value) ? transform() : null;
         }
         /**
          * Prints the informations of all about this mangler.
