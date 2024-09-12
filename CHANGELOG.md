@@ -39,3 +39,7 @@
 
 # 1.0.0-alpha17
 - Fixed issues related to high resource consumption, extended processing time, and unstable builds caused by identifying globally common CSS-related syntax patterns. Modified the process to handle different file types separately.
+
+# 1.0.0-alpha18
+- Fixed an issue where the minify option only recognized opacity values between 0 and 1 when parsing `rgb` or `rgba` syntax.
+- Fixed an issue where the logic incorrectly determined that there was no need to explicitly define the opacity value when it was 0%. Now, the explicit value is only omitted when the opacity is 100%.

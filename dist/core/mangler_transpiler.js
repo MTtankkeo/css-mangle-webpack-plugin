@@ -84,13 +84,14 @@
             if (asset.syntaxType != mangler_asset_1.ManglerAssetType.STYLE) {
                 return asset.syntaxText;
             }
-            const t1 = this.options.rgbToHex ? this.transformRGB(asset.syntaxText) : asset.syntaxText;
+            const t1 = this.options.rgbToHex ? this.transformLiterals(asset.syntaxText) : asset.syntaxText;
             const t2 = this.options.comments ? this.transformComments(t1) : t1;
             const t3 = this.options.escapeSequence ? this.transformEscapeSequence(t2) : t2;
             return t3;
         }
-        transformRGB(syntaxText) {
-            const regexpInst = /rgba?\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*(,\s*[0-1]+(\.\d+)?\s*)?\)/g;
+        /** About rgb() */
+        transformLiterals(syntaxText) {
+            const regexpInst = /rgba?\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*(,\s*(([0-1](\.\d+)?)|(\d{1,3}%))\s*)?\)/g;
             const syntaxList = syntaxText.matchAll(regexpInst);
             let replacedLength = 0;
             for (const global of syntaxList) {
@@ -98,11 +99,15 @@
                 const rgbStrs = rgbText[0].replaceAll(" ", "").split(",");
                 const rgbNums = rgbStrs.map((str, index) => {
                     if (index == 3) { // is opacity
-                        return Math.round(parseFloat(str) * 255) % 255 || null;
+                        return str.endsWith("%")
+                            ? Math.round(parseFloat(str.replace("%", "")) / 100 * 255)
+                            : Math.round(parseFloat(str) * 255);
                     }
                     return parseInt(str);
-                });
-                const rgbHexs = rgbNums.filter(v => v != null).map(val => val?.toString(16)); // to Hexadecimal
+                })
+                    // No needs to explicitly define the value when an opacity is 100% as text.
+                    .filter((val, i) => i != 3 || val < 255);
+                const rgbHexs = rgbNums.filter(v => v != null).map(val => val?.toString(16).padStart(2, "0")); // to Hexadecimal
                 const rgbHexStr = "#" + rgbHexs.join("");
                 const index = global.index + replacedLength;
                 const length = global[0].length;

@@ -45,7 +45,8 @@ export declare class CSSMinificationManglerTranspiler extends DrivenManglerTrans
     constructor(options: CSSMinificationManglerOptions);
     createContext(): ManglerContext<undefined>;
     transform(asset: ManglerAsset): string;
-    transformRGB(syntaxText: string): string;
+    /** About rgb() */
+    transformLiterals(syntaxText: string): string;
     transformComments(syntaxText: string): string;
     transformEscapeSequence(syntaxText: string): string;
 }
