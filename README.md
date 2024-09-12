@@ -5,7 +5,7 @@
         <thead>
           <tr>
             <th>Version</th>
-            <th>v1.0.0-alpha17</th>
+            <th>v1.0.0-alpha18</th>
           </tr>
         </tbody>
     </table>
