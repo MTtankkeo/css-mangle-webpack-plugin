@@ -15,3 +15,11 @@ This is just adding a option that ignore identifiers to CSS mangle task.
 __[ ] Publish Beta/Release Version__<br>
 This is just stabilize this package gradually and slowly. i.e. package maintenance.<br>
 > _2024-08-21 ~ 2025-01-01_
+
+__[ ] CSS Declaration Keyword Support__<br>
+- /* @css */ ".hello-world1 {}"
+- /* @css */ '#hello-world2 {}'
+- /* @css */ \`#hello-world3 {}\`
+```js
+const regexp =/(?<=\/\*\s*@css\s*\*\/\s*[`"'])[^]+?(?=[`"'])/g
+```

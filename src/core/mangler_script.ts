@@ -1,5 +1,4 @@
 import { ManglerRenameBuilder } from "../types";
-import { NodePath } from "ast-types/lib/node-path";
 import * as recast from "recast";
 
 export class ManglerScript {
